@@ -6,14 +6,17 @@
 #include "Menu.h"
 #include "Location.h"
 
+#define STANDARDFUNCTIONS(CLASSNAME, HERE) \
+CLASSNAME() : Location(HERE) {if(Menu::getDisplayDescription()) displayDescription();} \
+void displayDescription(); \
+Area processCommand(string input); \
+string getActions();
+
 class TownCenter : public Location {
 private:
 	static string description;
 public:
-	TownCenter() : Location(TOWNCENTER) {if(Menu::getDisplayDescription()) displayDescription();}
-	void displayDescription();
-	Area processCommand(string input);
-	string getActions();
+	STANDARDFUNCTIONS(TownCenter, TOWNCENTER)
 };
 
 class TownHall : public Location {
@@ -21,10 +24,7 @@ private:
 	static string description;
 	static bool DoorUnlocked;
 public:
-	TownHall() : Location(TOWNHALL) {if(Menu::getDisplayDescription()) displayDescription();}
-	void displayDescription();
-	Area processCommand(string input);
-	string getActions();
+	STANDARDFUNCTIONS(TownHall, TOWNHALL)
 };
 
 class TownHallLobby : public Location {
@@ -32,20 +32,14 @@ private:
 	static string description;
 	static bool TreasuryChestSearched;
 public:
-	TownHallLobby() : Location(TOWNHALLLOBBY) {if(Menu::getDisplayDescription()) displayDescription();}
-	void displayDescription();
-	Area processCommand(string input);
-	string getActions();
+	STANDARDFUNCTIONS(TownHallLobby, TOWNHALLLOBBY)
 };
 	
 class ThiefsHouse : public Location {
 private:
 	static string description;
 public:
-	ThiefsHouse() : Location(THIEFSHOUSE) {if(Menu::getDisplayDescription()) displayDescription();}
-	void displayDescription();
-	Area processCommand(string input);
-	string getActions();
+	STANDARDFUNCTIONS(ThiefsHouse, THIEFSHOUSE)
 };
 
 class ThiefsHouseInterior : public Location {
@@ -53,10 +47,7 @@ private:
 	static string description;
 	static bool ThiefSawYou;
 public:
-	ThiefsHouseInterior() : Location(THIEFSHOUSEINTERIOR) {if(Menu::getDisplayDescription()) displayDescription();}
-	void displayDescription();
-	Area processCommand(string input);
-	string getActions();
+	STANDARDFUNCTIONS(ThiefsHouseInterior, THIEFSHOUSEINTERIOR)
 	void processWait(string input);
 };
 
