@@ -7,6 +7,7 @@
 
 class Game {
 private:
+	Player PC;
 	Location *location;
 	Area currentArea, tempArea;
 	string input;

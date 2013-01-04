@@ -3,7 +3,7 @@
 bool Menu::DisplayDescription = true;
 bool Menu::DisplayActions = false;
 
-Menu::Menu(Player *input) : PC(input) {}
+Menu::Menu(Player &input) : PC(input) {}
 
 void Menu::pauseMenu()
 {
@@ -36,22 +36,22 @@ void Menu::inventoryMenu()
 	string selectionString;
 	const string selections = " 1. See all items.\n 2. Examine item.\n 3. Remove item.\n 0. Return to main menu.\n";
 	
-	cout << "\nInvetory:\n" << PC->inventoryToString();
-	if (! PC->emptyInventory())
+	cout << "\nInvetory:\n" << PC.inventoryToString();
+	if (! PC.emptyInventory())
 		cout << endl;
 
-	while (! PC->emptyInventory()) {
+	while (! PC.emptyInventory()) {
 		display(selections);
 		selectionNum = getSelection();
 		switch (selectionNum) {
 			case 1:
-				cout << "\nInvetory:\n" << PC->inventoryToString();
+				cout << "\nInvetory:\n" << PC.inventoryToString();
 				break;
 			case 2:
 				display("Which item do you want to examine?\n");
 				getline(cin, selectionString);
-				if (PC->isInInventory(selectionString)) {
-					Item temp = PC->getItem(selectionString);
+				if (PC.isInInventory(selectionString)) {
+					Item temp = PC.getItem(selectionString);
 					stringstream output;
 					output << "\nName:  " << temp.getName() << '\n';
 					if (temp.isUnique())
@@ -64,8 +64,8 @@ void Menu::inventoryMenu()
 			case 3:
 				display("Which item do you want to remove?\n");
 				getline(cin, selectionString);
-				if (PC->isInInventory(selectionString)) {
-					if ((PC->getItem(selectionString)).isUnique())
+				if (PC.isInInventory(selectionString)) {
+					if ((PC.getItem(selectionString)).isUnique())
 						display("You can't remove that item from your inventory.\n");
 					else {
 						string output = "Are you sure you want to remove ";
@@ -75,7 +75,7 @@ void Menu::inventoryMenu()
 						int tempSelection = getSelection();
 					
 						if (tempSelection == 1) {
-							PC->removeFromInventory(selectionString);
+							PC.removeFromInventory(selectionString);
 							output = selectionString;
 							output += " removed.\n";
 							display(output);

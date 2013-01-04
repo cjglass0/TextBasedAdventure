@@ -9,8 +9,8 @@
 #define STANDARDFUNCTIONS(CLASSNAME, HERE) \
 CLASSNAME() : Location(HERE) {if(Menu::getDisplayDescription()) displayDescription();} \
 void displayDescription(); \
-Area processCommand(string input); \
-string getActions();
+Area processCommand(string input, Player &PC); \
+string getActions(Player &PC);
 
 class TownCenter : public Location {
 private:

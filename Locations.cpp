@@ -1,8 +1,8 @@
 #include "Locations.h"
 
 /*	To add a new location:
- *		-add it's name to the Area enum in Globals.h
- *		-add it to the definision of areaToString() to string in Utilities.cpp
+ *		-add it's name to the Area enum in Location.h
+ *		-add it to the definision of areaToString() to string in Location.cpp
  *		-add a prototype to Locations.h
  *		-define a starting description and the processCommand(), displayDescription(), and getActions() functions in Locations.cpp
  *		-add the functionality to go to that area to the bodies of processCommand() and getActions() for the classes of the adjacent areas in Locations.cpp
@@ -22,7 +22,7 @@ void TownCenter::displayDescription()
 	display(output);
 }
 
-Area TownCenter::processCommand(string input)
+Area TownCenter::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Hall")
 		return TOWNHALL;
@@ -32,7 +32,7 @@ Area TownCenter::processCommand(string input)
 		return ERROR;
 }
 
-string TownCenter::getActions()
+string TownCenter::getActions(Player &PC)
 {
 	return " go to Town Hall\n go to Thief's House\n";
 }
@@ -51,7 +51,7 @@ void TownHall::displayDescription()
 	display(output);
 }
 
-Area TownHall::processCommand(string input)
+Area TownHall::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Center")
 		return TOWNCENTER;
@@ -59,11 +59,11 @@ Area TownHall::processCommand(string input)
 		if (DoorUnlocked == true) {
 			display("The door is already unlocked.\n");
 			return here;
-		} else if (PC->isInInventory(LOCKPICK)) {
+		} else if (PC.isInInventory(LOCKPICK)) {
 			DoorUnlocked = true;
 			display("The door has been unlocked, although the lockpick broke in the process.\n");
 			description = "The town hall.  It is abandoned, but you have unlocked the door.  ";
-			PC->removeFromInventory(LOCKPICK);
+			PC.removeFromInventory(LOCKPICK);
 			return here;
 		} else {
 			display("But you have nothing with which to unlock the door...\n");
@@ -81,10 +81,10 @@ Area TownHall::processCommand(string input)
 		return ERROR;
 	}
 
-string TownHall::getActions()
+string TownHall::getActions(Player &PC)
 {
 	string output;
-	if ((DoorUnlocked == false) && (PC->isInInventory(LOCKPICK)))
+	if ((DoorUnlocked == false) && (PC.isInInventory(LOCKPICK)))
 		output += " unlock door\n";
 	if (DoorUnlocked == true)
 		output += " enter Town Hall\n";
@@ -106,7 +106,7 @@ void TownHallLobby::displayDescription()
 	display(output);
 }
 
-Area TownHallLobby::processCommand(string input)
+Area TownHallLobby::processCommand(string input, Player &PC)
 {
 	if (input == "leave Town Hall")
 		return TOWNHALL;
@@ -117,14 +117,14 @@ Area TownHallLobby::processCommand(string input)
 		} else {
 			display("When the dust settles, you find a sack of gold.\n");
 			TreasuryChestSearched = true;
-			PC->addToInventory(SACKOFGOLD);
+			PC.addToInventory(SACKOFGOLD);
 			return here;
 		}
 	} else
 		return ERROR;
 }
 
-string TownHallLobby::getActions()
+string TownHallLobby::getActions(Player &PC)
 {
 	string output;
 	if (TreasuryChestSearched == false)
@@ -146,7 +146,7 @@ void ThiefsHouse::displayDescription()
 	display(output);
 }
 
-Area ThiefsHouse::processCommand(string input)
+Area ThiefsHouse::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Center")
 		return TOWNCENTER;
@@ -160,7 +160,7 @@ Area ThiefsHouse::processCommand(string input)
 		return ERROR;
 }
 
-string ThiefsHouse::getActions()
+string ThiefsHouse::getActions(Player &PC)
 {
 	return " enter house\n go to Town Center\n";
 }
@@ -179,10 +179,10 @@ void ThiefsHouseInterior::displayDescription()
 	display(output);
 }
 
-Area ThiefsHouseInterior::processCommand(string input)
+Area ThiefsHouseInterior::processCommand(string input, Player &PC)
 {
 	if (input == "take lockpick") {
-		PC->addToInventory(LOCKPICK);
+		PC.addToInventory(LOCKPICK);
 		display("You take a lockpick from the table.\n");
 		return here;
 	} else if (input == "leave house") {
@@ -195,7 +195,7 @@ Area ThiefsHouseInterior::processCommand(string input)
 		return ERROR;
 }
 
-string ThiefsHouseInterior::getActions()
+string ThiefsHouseInterior::getActions(Player &PC)
 {
 	string returner;
 	returner += " take lockpick\n";

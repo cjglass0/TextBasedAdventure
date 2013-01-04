@@ -21,21 +21,19 @@ Location::Location(Area input) : here(input)
 	display(output);
 }
 
-Player* Location::PC = new Player;
-
 // This function should never return the ERROR flag.
-Area Location::getCommand(string input)
+Area Location::getCommand(string input, Player &PC)
 {
 	if (input == "actions") {
 		if (Menu::getDisplayActions() == false)
-			displayActions();
+			displayActions(PC);
 	} else if (input == "observe")
 		displayDescription();
 	else if ((input == "wait until day") || (input == "wait until night"))
 		processWait(input);
 	else {
 		Area returner;
-		returner = processCommand(input);
+		returner = processCommand(input, PC);
 		if (returner == ERROR) {
 			displayUnknownCommand();
 			return here;
@@ -48,10 +46,10 @@ Area Location::getCommand(string input)
 bool Location::IsDay = true;
 
 // Put a space before all displayed actions.
-void Location::displayActions()
+void Location::displayActions(Player &PC)
 {
 	stringstream output;
-	output << "Your possible actions are:\n observe\n" << getActions() << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n" << " quit" << endl;
+	output << "Your possible actions are:\n observe\n" << getActions(PC) << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n" << " quit" << endl;
 	display(output.str());
 }
 

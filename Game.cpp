@@ -28,7 +28,7 @@ void Game::run()
 	while (true) {
 		if (Menu::getDisplayActions()) {
 			cout << endl;
-			location->displayActions();
+			location->displayActions(PC);
 		}
 		
 		cout << endl <<"What will you do?\n";
@@ -39,10 +39,10 @@ void Game::run()
 			cout << "Goodbye!\n";
 			break;
 		} else if (input == "menu") {
-			Menu menu(Location::PC);
+			Menu menu(PC);
 			menu.pauseMenu();
 		} else {
-			tempArea = location->getCommand(input);
+			tempArea = location->getCommand(input, PC);
 			if (tempArea == TERMINATE)
 				break;
 			if (tempArea != currentArea) {
@@ -52,6 +52,5 @@ void Game::run()
 		}
 	}
 	
-	delete Location::PC;
 	cout << endl;
 }
