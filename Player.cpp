@@ -1,8 +1,10 @@
 #include "Player.h"
 
-/* Player::Player()
+Player::Player(Area currentLocationIn)
 {
-} */
+	currentLocation = currentLocationIn;
+	isAlive = true;
+}
 
 void Player::addToInventory(Item input, uint quantity)
 {

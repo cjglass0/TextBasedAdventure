@@ -22,14 +22,15 @@ void TownCenter::displayDescription()
 	display(output);
 }
 
-Area TownCenter::processCommand(string input, Player &PC)
+status TownCenter::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Hall")
-		return TOWNHALL;
-	if (input == "go to Thief's House")
-		return THIEFSHOUSE;
+		PC.setCurrentLocation(TOWNHALL);
+	else if (input == "go to Thief's House")
+		PC.setCurrentLocation(THIEFSHOUSE);
 	else
 		return ERROR;
+	return OK;
 }
 
 string TownCenter::getActions(Player &PC)
@@ -51,35 +52,32 @@ void TownHall::displayDescription()
 	display(output);
 }
 
-Area TownHall::processCommand(string input, Player &PC)
+status TownHall::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Center")
-		return TOWNCENTER;
+		PC.setCurrentLocation(TOWNCENTER);
 	else if (input == "unlock door") {
 		if (DoorUnlocked == true) {
 			display("The door is already unlocked.\n");
-			return here;
 		} else if (PC.isInInventory(LOCKPICK)) {
 			DoorUnlocked = true;
 			display("The door has been unlocked, although the lockpick broke in the process.\n");
 			description = "The town hall.  It is abandoned, but you have unlocked the door.  ";
 			PC.removeFromInventory(LOCKPICK);
-			return here;
 		} else {
 			display("But you have nothing with which to unlock the door...\n");
-			return here;
 		}
 	}
 	else if (input == "enter Town Hall") {
 		if (DoorUnlocked)
-			return TOWNHALLLOBBY;
+			PC.setCurrentLocation(TOWNHALLLOBBY);
 		else {
 			display("The door is locked and won't budge.\n");
-			return here;
 		}
 	} else
 		return ERROR;
-	}
+	return OK;
+}
 
 string TownHall::getActions(Player &PC)
 {
@@ -106,22 +104,21 @@ void TownHallLobby::displayDescription()
 	display(output);
 }
 
-Area TownHallLobby::processCommand(string input, Player &PC)
+status TownHallLobby::processCommand(string input, Player &PC)
 {
 	if (input == "leave Town Hall")
-		return TOWNHALL;
+		PC.setCurrentLocation(TOWNHALL);
 	else if (input == "search treasury chest") {
-		if (TreasuryChestSearched) {
+		if (TreasuryChestSearched)
 			display("You've already searched the treasury chest.  It's empty now, you greedy son-of-an-orc.\n");
-			return here;
-		} else {
+		else {
 			display("When the dust settles, you find a sack of gold.\n");
 			TreasuryChestSearched = true;
 			PC.addToInventory(SACKOFGOLD);
-			return here;
 		}
 	} else
 		return ERROR;
+	return OK;
 }
 
 string TownHallLobby::getActions(Player &PC)
@@ -146,18 +143,19 @@ void ThiefsHouse::displayDescription()
 	display(output);
 }
 
-Area ThiefsHouse::processCommand(string input, Player &PC)
+status ThiefsHouse::processCommand(string input, Player &PC)
 {
 	if (input == "go to Town Center")
-		return TOWNCENTER;
+		PC.setCurrentLocation(TOWNCENTER);
 	else if (input == "enter house") {
 		if (IsDay) {
 			display("Well that wasn't particularly bright of you.  The thief killed you for breaking into his house.\n");
-			return TERMINATE;
+			PC.killPlayer();
 		} else
-			return THIEFSHOUSEINTERIOR;
+			PC.setCurrentLocation(THIEFSHOUSEINTERIOR);
 	} else 
 		return ERROR;
+	return OK;
 }
 
 string ThiefsHouse::getActions(Player &PC)
@@ -179,28 +177,25 @@ void ThiefsHouseInterior::displayDescription()
 	display(output);
 }
 
-Area ThiefsHouseInterior::processCommand(string input, Player &PC)
+status ThiefsHouseInterior::processCommand(string input, Player &PC)
 {
 	if (input == "take lockpick") {
 		PC.addToInventory(LOCKPICK);
 		display("You take a lockpick from the table.\n");
-		return here;
 	} else if (input == "leave house") {
 		if (ThiefSawYou) {
 			display("The thief must have seen you in his house, because he was waiting outside to ambush you.  He killed you.\n");
-			return TERMINATE;
+			PC.killPlayer();
 		} else
-		return THIEFSHOUSE;
+		PC.setCurrentLocation(THIEFSHOUSE);
 	} else
 		return ERROR;
+	return OK;
 }
 
 string ThiefsHouseInterior::getActions(Player &PC)
 {
-	string returner;
-	returner += " take lockpick\n";
-	returner += " leave house\n";
-	return returner;
+	return " take lockpick\n leave house\n";
 }
 
 void ThiefsHouseInterior::processWait(string input)

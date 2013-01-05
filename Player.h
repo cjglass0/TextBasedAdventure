@@ -11,9 +11,17 @@ struct ItemComp {
 
 class Player {
 private:
+	bool isAlive;
+	Area currentLocation;
 	multimap<string, Item, ItemComp> Inventory;
 public:
-//	Player();  Not required for now.
+	Player(Area currentLocationIn);
+	
+	Area getCurrentLocation(){return currentLocation;}
+	void setCurrentLocation(Area input){currentLocation = input;}
+	bool isDead(){return !isAlive;}
+	void killPlayer(){isAlive = false;}
+	
 	void addToInventory(Item input, uint quantity = 1);
 	Item getItem(string name) const;
 	bool isInInventory(Item input) const;

@@ -21,8 +21,7 @@ Location::Location(Area input) : here(input)
 	display(output);
 }
 
-// This function should never return the ERROR flag.
-Area Location::getCommand(string input, Player &PC)
+void Location::getCommand(string input, Player &PC)
 {
 	if (input == "actions") {
 		if (Menu::getDisplayActions() == false)
@@ -32,15 +31,10 @@ Area Location::getCommand(string input, Player &PC)
 	else if ((input == "wait until day") || (input == "wait until night"))
 		processWait(input);
 	else {
-		Area returner;
-		returner = processCommand(input, PC);
-		if (returner == ERROR) {
+		if (processCommand(input, PC) == ERROR) {
 			displayUnknownCommand();
-			return here;
 		}
-		return returner;
 	}
-	return here;
 }
 
 bool Location::IsDay = true;
@@ -49,17 +43,16 @@ bool Location::IsDay = true;
 void Location::displayActions(Player &PC)
 {
 	stringstream output;
-	output << "Your possible actions are:\n observe\n" << getActions(PC) << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n" << " quit" << endl;
+	output << "Your possible actions are:\n observe\n" << getActions(PC) << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n quit\n";
 	display(output.str());
 }
 
 void Location::displayUnknownCommand()
 {
 	if (Menu::getDisplayActions())
-		display("Whatever that is, you can't do it.");
+		display("Whatever that is, you can't do it.\n");
 	else
-		display("Whatever that is, you can't do it.  Try using the \"actions\" command.");
-	cout << endl;
+		display("Whatever that is, you can't do it.  Try using the \"actions\" command.\n");
 }
 
 void Location::processWait(string input)

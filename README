@@ -1,4 +1,4 @@
-Right now, I'm developing the code for the game engine.  Everything in the world itself, like the areas and the items, exist solely as contrived situations to test that code as I develop it.  Development of the world itself will come after the engine is working.
+Right now, I'm developing the code for the game engine.  Everything in the world itself, like the areas and the items, exist solely as contrived situations to test that code as I develop it.  Development of the world itself will come after the engine is working and optimal.
 
 The general "architecture" of the code is:
 Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
@@ -6,4 +6,4 @@ Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
 Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
 
 To-do:
--Have the location class have a vector of actions (with inactions being a kind of action that doesn't change the environment or player and doesn't show up when "get actions" is typed; they could have null function pointers).  Each derived class's constructor should add actions to the vector when called, and actions should be added or removed as necessary.  Once this is done, perhaps have the player class have an Area field, and the Game code will create a new area on a new turn if the area is changed.
+-Have the location class have a container of actions (with inactions being a kind of action that doesn't change the environment or player and doesn't show up when "get actions" is typed).  Each derived class's constructor should add actions to the container when called, and actions should be added or removed as necessary.  Perhaps the container could be a map, with the command (a string) being the key and the actions (function pointers, with the functions taking a Player& as an argument) being the contained objects.

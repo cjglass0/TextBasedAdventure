@@ -15,10 +15,9 @@ Location* Game::locationMaker(Area input)
 	}
 }
 
-Game::Game()
+Game::Game() : PC(StartingLocation)
 {
-	display("\nWelcome to the adventure game!\n");
-	cout << endl;
+	display("\nWelcome to the adventure game!\n\n");
 	currentArea = StartingLocation;
 	location = locationMaker(StartingLocation);
 }
@@ -42,12 +41,13 @@ void Game::run()
 			Menu menu(PC);
 			menu.pauseMenu();
 		} else {
-			tempArea = location->getCommand(input, PC);
-			if (tempArea == TERMINATE)
-				break;
-			if (tempArea != currentArea) {
-				location = locationMaker(tempArea);
-				currentArea = tempArea;
+			location->getCommand(input, PC);
+			if (PC.isDead())
+				break; // Each deadly action should have its own output, so there's no need to define one for here.
+			if (currentArea != PC.getCurrentLocation()) {
+				currentArea = PC.getCurrentLocation();
+				delete location;
+				location = locationMaker(currentArea);
 			}
 		}
 	}

@@ -9,7 +9,7 @@ class Game {
 private:
 	Player PC;
 	Location *location;
-	Area currentArea, tempArea;
+	Area currentArea;
 	string input;
 	Location *locationMaker(Area input);
 public:

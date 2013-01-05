@@ -6,48 +6,50 @@
 #include "Menu.h"
 #include "Location.h"
 
-#define STANDARDFUNCTIONS(CLASSNAME, HERE) \
-CLASSNAME() : Location(HERE) {if(Menu::getDisplayDescription()) displayDescription();} \
-void displayDescription(); \
-Area processCommand(string input, Player &PC); \
-string getActions(Player &PC);
+#define STANDARDDECLARATIONS(CLASSNAME, HERE) \
+private: \
+	static string description;\
+public: \
+	CLASSNAME() : Location(HERE) {if(Menu::getDisplayDescription()) displayDescription();} \
+	void displayDescription(); \
+	status processCommand(string input, Player &PC); \
+	string getActions(Player &PC); \
+	static void setDescription(string input){description = input;} \
+	static string getDescription(){return description;}
 
 class TownCenter : public Location {
-private:
-	static string description;
-public:
-	STANDARDFUNCTIONS(TownCenter, TOWNCENTER)
+	STANDARDDECLARATIONS(TownCenter, TOWNCENTER)
 };
 
 class TownHall : public Location {
+	STANDARDDECLARATIONS(TownHall, TOWNHALL)
 private:
-	static string description;
 	static bool DoorUnlocked;
 public:
-	STANDARDFUNCTIONS(TownHall, TOWNHALL)
+	static void setDoorUnlocked(bool input){DoorUnlocked = input;}
+	static bool getDoorUnlocked(){return DoorUnlocked;}
 };
 
 class TownHallLobby : public Location {
+	STANDARDDECLARATIONS(TownHallLobby, TOWNHALLLOBBY)
 private:
-	static string description;
 	static bool TreasuryChestSearched;
 public:
-	STANDARDFUNCTIONS(TownHallLobby, TOWNHALLLOBBY)
+	static void setTreasuryChestSearched(bool input){TreasuryChestSearched = input;}
+	static bool getTreasuryChestSearched(){return TreasuryChestSearched;}
 };
 	
 class ThiefsHouse : public Location {
-private:
-	static string description;
-public:
-	STANDARDFUNCTIONS(ThiefsHouse, THIEFSHOUSE)
+	STANDARDDECLARATIONS(ThiefsHouse, THIEFSHOUSE)
 };
 
 class ThiefsHouseInterior : public Location {
+	STANDARDDECLARATIONS(ThiefsHouseInterior, THIEFSHOUSEINTERIOR)
 private:
-	static string description;
 	static bool ThiefSawYou;
 public:
-	STANDARDFUNCTIONS(ThiefsHouseInterior, THIEFSHOUSEINTERIOR)
+	static void setThiefSawYou(bool input){ThiefSawYou = input;}
+	static bool getThiefSawYou(){return ThiefSawYou;}
 	void processWait(string input);
 };
 
