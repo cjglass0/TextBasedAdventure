@@ -1,11 +1,12 @@
 #include "Locations.h"
 
 /*	To add a new location:
- *		-add it's name to the Area enum in Location.h
- *		-add it to the definision of areaToString() to string in Location.cpp
+ *		-add it's name to the Area enum in Globals.h
+ *		-add it to the definision of areaToString() to string in Utilities.cpp
  *		-add a prototype to Locations.h
  *		-define a starting description and the processCommand(), displayDescription(), and getActions() functions in Locations.cpp
  *		-add the functionality to go to that area to the bodies of processCommand() and getActions() for the classes of the adjacent areas in Locations.cpp
+ *		-add it to the TEMPAREAS macro in Game.cpp
  *		-add it as a case in locationMaker() in Game.cpp
  */
 
@@ -36,6 +37,18 @@ status TownCenter::processCommand(string input, Player &PC)
 string TownCenter::getActions(Player &PC)
 {
 	return " go to Town Hall\n go to Thief's House\n";
+}
+
+ostream& operator<<(ostream &output, TownCenter &input)
+{
+	output << input.description << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, TownCenter &input)
+{
+	getline(inputFile, input.description);
+	return inputFile;
 }
 
 /* 
@@ -90,10 +103,23 @@ string TownHall::getActions(Player &PC)
 	return output;
 }
 
+ostream& operator<<(ostream &output, TownHall &input)
+{
+	output << input.DoorUnlocked << input.description << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, TownHall &input)
+{
+	inputFile >> input.DoorUnlocked;
+	getline(inputFile, input.description);
+	return inputFile;
+}
+
 /*
  *		Town Hall Lobby
  */
-	
+
 string TownHallLobby::description = "The lobby of the abandoned town hall.  An old treasury chest lies in the corner.  ";
 bool TownHallLobby::TreasuryChestSearched = false;
 
@@ -115,6 +141,7 @@ status TownHallLobby::processCommand(string input, Player &PC)
 			display("When the dust settles, you find a sack of gold.\n");
 			TreasuryChestSearched = true;
 			PC.addToInventory(SACKOFGOLD);
+			description = "The lobby of the abandoned town hall.  An old treasury chest lies openned and empty in the corner.  ";
 		}
 	} else
 		return ERROR;
@@ -128,6 +155,19 @@ string TownHallLobby::getActions(Player &PC)
 		output += " search treasury chest\n";
 	output += " leave Town Hall\n";
 	return output;
+}
+
+ostream& operator<<(ostream &output, TownHallLobby &input)
+{
+	output << input.TreasuryChestSearched << input.description << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, TownHallLobby &input)
+{
+	inputFile >> input.TreasuryChestSearched;
+	getline(inputFile, input.description);
+	return inputFile;
 }
 
 /*
@@ -163,6 +203,18 @@ string ThiefsHouse::getActions(Player &PC)
 	return " enter house\n go to Town Center\n";
 }
 
+ostream& operator<<(ostream &output, ThiefsHouse &input)
+{
+	output << input.description << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, ThiefsHouse &input)
+{
+	getline(inputFile, input.description);
+	return inputFile;
+}
+
 /*
  *		Thief's House Interior
  */
@@ -187,7 +239,7 @@ status ThiefsHouseInterior::processCommand(string input, Player &PC)
 			display("The thief must have seen you in his house, because he was waiting outside to ambush you.  He killed you.\n");
 			PC.killPlayer();
 		} else
-		PC.setCurrentLocation(THIEFSHOUSE);
+			PC.setCurrentLocation(THIEFSHOUSE);
 	} else
 		return ERROR;
 	return OK;
@@ -217,4 +269,17 @@ void ThiefsHouseInterior::processWait(string input)
 	}
 	else
 		cout << "Error: processWait() in ThiefsHouseInterior was forced to handle an unknown input.\n";
+}
+
+ostream& operator<<(ostream &output, ThiefsHouseInterior &input)
+{
+	output << input.ThiefSawYou << input.description << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, ThiefsHouseInterior &input)
+{
+	inputFile >> input.ThiefSawYou;
+	getline(inputFile, input.description);
+	return inputFile;
 }

@@ -4,6 +4,3 @@ The general "architecture" of the code is:
 Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
 
 Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
-
-To-do:
--Have the location class have a container of actions (with inactions being a kind of action that doesn't change the environment or player and doesn't show up when "get actions" is typed).  Each derived class's constructor should add actions to the container when called, and actions should be added or removed as necessary.  Perhaps the container could be a map, with the command (a string) being the key and the actions (function pointers, with the functions taking a Player& as an argument) being the contained objects.

@@ -4,6 +4,41 @@ unsigned int UtilitiesOptions::screenWidth = 80;
 unsigned int UtilitiesOptions::screenHeight = 24;
 bool UtilitiesOptions::displayItemDescriptions = false;
 
+ostream& operator<<(ostream &output, UtilitiesOptions &input)
+{
+	output << input.screenWidth << ' ' << input.screenHeight << ' ' << input.displayItemDescriptions << '\n';
+	return output;
+}
+
+ifstream& operator>>(ifstream &inputFile, UtilitiesOptions &input)
+{	
+	int tempInt;
+	bool tempBool;
+	
+	inputFile >> tempInt;
+	input.screenWidth = tempInt;
+	inputFile >> tempInt;
+	input.screenHeight = tempInt;
+	inputFile >> tempBool;
+	input.displayItemDescriptions = tempBool;
+	
+	inputFile.ignore(1);
+	return inputFile;
+}
+
+string areaToString(Area input)
+{
+	switch (input) {
+		case TOWNCENTER:			return "Town Center";
+		case TOWNHALL:				return "Town Hall";
+		case TOWNHALLLOBBY:			return "Town Hall Lobby";
+		case THIEFSHOUSE:			return "Thief's House";
+		case THIEFSHOUSEINTERIOR:	return "Thief's House Interior";
+		default:
+			return "Error: areaToString() received improper input.\n";
+	}
+}
+
 void display(string input, unsigned int width)
 {
 	const unsigned int screenWidth = (width == 0) ? UtilitiesOptions::getScreenWidth() : width;	

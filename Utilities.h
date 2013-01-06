@@ -17,7 +17,13 @@ public:
 	static void setScreenWidth(uint input){screenWidth = input;}
 	static void setScreenHeight(uint input){screenHeight = input;}
 	static void setDisplayItemDescriptions(bool input){displayItemDescriptions = input;}
+	
+	friend ostream& operator<<(ostream &output, UtilitiesOptions &input);
+	friend ifstream& operator>>(ifstream &inputFile, UtilitiesOptions &input);
 };
+
+// Takes a value of the Area enum as input and return's the area's name as a string.
+string areaToString(Area input);
 
 // Displays the input string with proper wrapping, i.e. no split words and no spaces at the start of a wrapped line.  This function WILL print out spaces after a newline character.
 // If width is specified, the input is printed out with that width, not the set screen width.

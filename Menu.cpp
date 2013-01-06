@@ -5,6 +5,24 @@ bool Menu::DisplayActions = false;
 
 Menu::Menu(Player &input) : PC(input) {}
 
+ostream& operator<<(ostream &output, Menu &input)
+{
+	output << input.DisplayDescription << ' ' << input.DisplayActions << '\n';
+	return output;
+}
+	
+ifstream& operator>>(ifstream &inputFile, Menu &input)
+{
+	bool tempBool;
+	inputFile >> tempBool;
+	input.DisplayDescription = tempBool;
+	inputFile >> tempBool;
+	input.DisplayActions = tempBool;
+	
+	inputFile.ignore(1);
+	return inputFile;
+}
+
 void Menu::pauseMenu()
 {
 	int selection;
@@ -23,9 +41,9 @@ void Menu::pauseMenu()
 			default:
 				display("Invalid selection.  Try again.\n");
 		}
-		if (selection != 0)
-			cout << endl;
-		else
+		
+		cout << endl;
+		if (selection == 0)
 			break;
 	}
 }

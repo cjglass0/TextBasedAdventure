@@ -112,3 +112,32 @@ string Player::inventoryToString() const
 	
 	return output.str();
 }
+
+ostream& operator<<(ostream &output, Player &input)
+{
+	output << input.currentLocation << '\n';
+	
+	multimap<string, Item, ItemComp>::const_iterator it;
+	for (it = (input.Inventory).begin() ; it != (input.Inventory).end(); it++)
+		output << (it->second).getName() << '\n' << (it->second).isUnique() << '\n' << (it->second).getDescription() << '\n';
+	output << "end_of_inventory\n"; 
+}
+
+ifstream& operator>>(ifstream &inputFile, Player &input)
+{
+	int tempArea;
+	inputFile >> tempArea;
+	input.currentLocation = (Area) tempArea;
+	inputFile.ignore(1);
+	
+	string tempName, tempDescription;
+	int tempUnique;
+	getline(inputFile, tempName);
+	while (tempName != "end_of_inventory") {
+		inputFile >> tempUnique;
+		inputFile.ignore(1);
+		getline(inputFile, tempDescription);
+		input.addToInventory(Item(tempName, tempDescription, tempUnique));
+		getline(inputFile, tempName);
+	}
+}

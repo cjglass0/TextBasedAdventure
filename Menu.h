@@ -19,6 +19,9 @@ public:
 	
 	static bool getDisplayDescription(){return DisplayDescription;}
 	static bool getDisplayActions(){return DisplayActions;}
+	
+	friend ostream& operator<<(ostream &output, Menu &input);
+	friend ifstream& operator>>(ifstream &inputFile, Menu &input);
 };
 
 #endif

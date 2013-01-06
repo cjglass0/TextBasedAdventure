@@ -32,6 +32,9 @@ public:
 	int removeFromInventory(Item input, uint quantity = 1);// returns the number of such objects remaining in the inventory.  Returns -1 if nothing removed (i.e. if quantity > count).
 	int removeFromInventory(string name, uint quantity = 1);
 	string inventoryToString() const;
+	
+	friend ostream& operator<<(ostream &output, Player &input);
+	friend ifstream& operator>>(ifstream &inputFile, Player &input);
 };
 
 #endif

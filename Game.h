@@ -8,10 +8,11 @@
 class Game {
 private:
 	Player PC;
-	Location *location;
-	Area currentArea;
-	string input;
+	
 	Location *locationMaker(Area input);
+	void loadGame(string filename, Player &PC);
+	void saveGame(string filename, Player &PC);
+	void playGame(string filename = "");
 public:
 	Game();
 	void run();

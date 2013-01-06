@@ -1,34 +1,18 @@
 #include "Locations.h"
 #include "Menu.h"
 
-string areaToString(Area input)
-{
-	switch (input) {
-		case TOWNCENTER:			return "Town Center";
-		case TOWNHALL:				return "Town Hall";
-		case TOWNHALLLOBBY:			return "Town Hall Lobby";
-		case THIEFSHOUSE:			return "Thief's House";
-		case THIEFSHOUSEINTERIOR:	return "Thief's House Interior";
-		default:
-			return "Error: areaToString() received improper input.\n";
-	}
-}
-
-Location::Location(Area input) : here(input)
-{
-	string output = areaToString(input);
-	output += '\n';
-	display(output);
-}
+Location::Location(Area input) : here(input){}
 
 void Location::getCommand(string input, Player &PC)
 {
 	if (input == "actions") {
 		if (Menu::getDisplayActions() == false)
 			displayActions(PC);
-	} else if (input == "observe")
+	} else if (input == "observe") {
+		display(areaToString(here));
+		cout << endl;
 		displayDescription();
-	else if ((input == "wait until day") || (input == "wait until night"))
+	} else if ((input == "wait until day") || (input == "wait until night"))
 		processWait(input);
 	else {
 		if (processCommand(input, PC) == ERROR) {
@@ -43,7 +27,7 @@ bool Location::IsDay = true;
 void Location::displayActions(Player &PC)
 {
 	stringstream output;
-	output << "Your possible actions are:\n observe\n" << getActions(PC) << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n quit\n";
+	output << "Your possible actions are:\n observe\n" << getActions(PC) << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n save\n quit\n";
 	display(output.str());
 }
 
