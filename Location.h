@@ -22,8 +22,10 @@ public:
 	void getCommand(string input, Player &PC); // Takes input and uses the virtual processCommand function to process it. Returns the area the player ends up in after the command is processed.
 	virtual void displayDescription() = 0; // Displays the area specific description. Each area should have its own static description variable.
 	
-	static bool getIsDay(){return IsDay;}
-	static void setIsDay(bool input){IsDay = input;}
+	static string saveLocationData();
+	static void loadLocationData(string input);
+	virtual string saveData() = 0;
+	virtual void loadData(string input) = 0;
 };
 
 #endif

@@ -14,8 +14,8 @@ public: \
 	void displayDescription(); \
 	status processCommand(string input, Player &PC); \
 	string getActions(Player &PC); \
-	friend ostream& operator<<(ostream &output, CLASSNAME &input); \
-	friend ifstream& operator>>(ifstream &inputFile, CLASSNAME &input);
+	string saveData(); \
+	void loadData(string input);
 
 class TownCenter : public Location {
 	STANDARDDECLARATIONS(TownCenter, TOWNCENTER)

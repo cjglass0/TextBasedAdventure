@@ -6,7 +6,6 @@
  *		-add a prototype to Locations.h
  *		-define a starting description and the processCommand(), displayDescription(), and getActions() functions in Locations.cpp
  *		-add the functionality to go to that area to the bodies of processCommand() and getActions() for the classes of the adjacent areas in Locations.cpp
- *		-add it to the TEMPAREAS macro in Game.cpp
  *		-add it as a case in locationMaker() in Game.cpp
  */
 
@@ -39,16 +38,22 @@ string TownCenter::getActions(Player &PC)
 	return " go to Town Hall\n go to Thief's House\n";
 }
 
-ostream& operator<<(ostream &output, TownCenter &input)
+string TownCenter::saveData()
 {
-	output << input.description << '\n';
-	return output;
+	stringstream output;
+	output << description << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, TownCenter &input)
+void TownCenter::loadData(string input)
 {
-	getline(inputFile, input.description);
-	return inputFile;
+	stringstream strstr(input);
+	getline(strstr, description);
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with TownCenter::loadData().\n";
 }
 
 /* 
@@ -103,17 +108,25 @@ string TownHall::getActions(Player &PC)
 	return output;
 }
 
-ostream& operator<<(ostream &output, TownHall &input)
+string TownHall::saveData()
 {
-	output << input.DoorUnlocked << input.description << '\n';
-	return output;
+	stringstream output;
+	output << DoorUnlocked << '\n' << description << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, TownHall &input)
+void TownHall::loadData(string input)
 {
-	inputFile >> input.DoorUnlocked;
-	getline(inputFile, input.description);
-	return inputFile;
+	stringstream strstr(input);
+	strstr >> DoorUnlocked;
+	
+	strstr.ignore(1);
+	getline(strstr, description);
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with TownHall::loadData().\n";
 }
 
 /*
@@ -157,17 +170,25 @@ string TownHallLobby::getActions(Player &PC)
 	return output;
 }
 
-ostream& operator<<(ostream &output, TownHallLobby &input)
+string TownHallLobby::saveData()
 {
-	output << input.TreasuryChestSearched << input.description << '\n';
-	return output;
+	stringstream output;
+	output << TreasuryChestSearched << '\n' << description << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, TownHallLobby &input)
+void TownHallLobby::loadData(string input)
 {
-	inputFile >> input.TreasuryChestSearched;
-	getline(inputFile, input.description);
-	return inputFile;
+	stringstream strstr(input);
+	strstr >> TreasuryChestSearched;
+	
+	strstr.ignore(1);
+	getline(strstr, description);
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with TownHallLobby::loadData().\n";
 }
 
 /*
@@ -203,16 +224,22 @@ string ThiefsHouse::getActions(Player &PC)
 	return " enter house\n go to Town Center\n";
 }
 
-ostream& operator<<(ostream &output, ThiefsHouse &input)
+string ThiefsHouse::saveData()
 {
-	output << input.description << '\n';
-	return output;
+	stringstream output;
+	output << description << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, ThiefsHouse &input)
+void ThiefsHouse::loadData(string input)
 {
-	getline(inputFile, input.description);
-	return inputFile;
+	stringstream strstr(input);
+	getline(strstr, description);
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with TownCenter::loadData().\n";
 }
 
 /*
@@ -271,15 +298,23 @@ void ThiefsHouseInterior::processWait(string input)
 		cout << "Error: processWait() in ThiefsHouseInterior was forced to handle an unknown input.\n";
 }
 
-ostream& operator<<(ostream &output, ThiefsHouseInterior &input)
+string ThiefsHouseInterior::saveData()
 {
-	output << input.ThiefSawYou << input.description << '\n';
-	return output;
+	stringstream output;
+	output << ThiefSawYou << '\n' << description << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, ThiefsHouseInterior &input)
+void ThiefsHouseInterior::loadData(string input)
 {
-	inputFile >> input.ThiefSawYou;
-	getline(inputFile, input.description);
-	return inputFile;
+	stringstream strstr(input);
+	strstr >> ThiefSawYou;
+		
+	strstr.ignore(1);
+	getline(strstr, description);
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with TownHallLobby::loadData().\n";
 }

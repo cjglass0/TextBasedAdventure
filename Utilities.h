@@ -18,8 +18,8 @@ public:
 	static void setScreenHeight(uint input){screenHeight = input;}
 	static void setDisplayItemDescriptions(bool input){displayItemDescriptions = input;}
 	
-	friend ostream& operator<<(ostream &output, UtilitiesOptions &input);
-	friend ifstream& operator>>(ifstream &inputFile, UtilitiesOptions &input);
+	static string saveData();
+	static void loadData(string input);
 };
 
 // Takes a value of the Area enum as input and return's the area's name as a string.

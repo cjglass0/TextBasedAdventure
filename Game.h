@@ -10,8 +10,8 @@ private:
 	Player PC;
 	
 	Location *locationMaker(Area input);
-	void loadGame(string filename, Player &PC);
 	void saveGame(string filename, Player &PC);
+	status loadGame(string filename, Player &PC);
 	void playGame(string filename = "");
 public:
 	Game();

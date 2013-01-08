@@ -113,31 +113,43 @@ string Player::inventoryToString() const
 	return output.str();
 }
 
-ostream& operator<<(ostream &output, Player &input)
+string Player::saveData()
 {
-	output << input.currentLocation << '\n';
+	stringstream output;
+	output << currentLocation << '\n';
 	
 	multimap<string, Item, ItemComp>::const_iterator it;
-	for (it = (input.Inventory).begin() ; it != (input.Inventory).end(); it++)
+	for (it = Inventory.begin() ; it != Inventory.end(); it++)
 		output << (it->second).getName() << '\n' << (it->second).isUnique() << '\n' << (it->second).getDescription() << '\n';
-	output << "end_of_inventory\n"; 
+	output << "end_of_inventory" << '\n' << ENDMARKER << '\n'; 
+	
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, Player &input)
+void Player::loadData(string input)
 {
+	stringstream strstr(input);
+	
 	int tempArea;
-	inputFile >> tempArea;
-	input.currentLocation = (Area) tempArea;
-	inputFile.ignore(1);
+	strstr >> tempArea;
+	currentLocation = (Area) tempArea;
+	strstr.ignore(1);
 	
 	string tempName, tempDescription;
-	int tempUnique;
-	getline(inputFile, tempName);
+	bool tempUnique;
+	
+	getline(strstr, tempName);
 	while (tempName != "end_of_inventory") {
-		inputFile >> tempUnique;
-		inputFile.ignore(1);
-		getline(inputFile, tempDescription);
-		input.addToInventory(Item(tempName, tempDescription, tempUnique));
-		getline(inputFile, tempName);
+		strstr >> tempUnique;
+		strstr.ignore(1);
+		getline(strstr, tempDescription);
+		addToInventory(Item(tempName, tempDescription, tempUnique));
+		getline(strstr, tempName);
 	}
+	
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with Player::loadData().\n";
+	
 }

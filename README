@@ -4,3 +4,7 @@ The general "architecture" of the code is:
 Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
 
 Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
+
+To-do:
+-Make the save functionality check whether such a savefile exists and ask if the player would like to override it (or check if it exists and isn't a save file, in which case don't allow the save).
+-Make the error messages use cout, rather than display. (That way they don't depend on display() working correctly.)

@@ -5,22 +5,23 @@ bool Menu::DisplayActions = false;
 
 Menu::Menu(Player &input) : PC(input) {}
 
-ostream& operator<<(ostream &output, Menu &input)
+string Menu::saveData()
 {
-	output << input.DisplayDescription << ' ' << input.DisplayActions << '\n';
-	return output;
+	stringstream output;
+	output << DisplayDescription << ' ' << DisplayActions << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
-	
-ifstream& operator>>(ifstream &inputFile, Menu &input)
+
+void Menu::loadData(string input)
 {
-	bool tempBool;
-	inputFile >> tempBool;
-	input.DisplayDescription = tempBool;
-	inputFile >> tempBool;
-	input.DisplayActions = tempBool;
+	stringstream strstr(input);
+	strstr >> DisplayDescription >> DisplayActions;
 	
-	inputFile.ignore(1);
-	return inputFile;
+	char test;
+	strstr.ignore(1);
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with UtilitiesOptions::loadData().\n";	
 }
 
 void Menu::pauseMenu()

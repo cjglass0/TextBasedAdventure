@@ -4,26 +4,22 @@ unsigned int UtilitiesOptions::screenWidth = 80;
 unsigned int UtilitiesOptions::screenHeight = 24;
 bool UtilitiesOptions::displayItemDescriptions = false;
 
-ostream& operator<<(ostream &output, UtilitiesOptions &input)
+string UtilitiesOptions::saveData()
 {
-	output << input.screenWidth << ' ' << input.screenHeight << ' ' << input.displayItemDescriptions << '\n';
-	return output;
+	stringstream output;
+	output << screenWidth << ' ' << screenHeight << ' ' << displayItemDescriptions << '\n' << ENDMARKER << '\n';
+	return output.str();
 }
 
-ifstream& operator>>(ifstream &inputFile, UtilitiesOptions &input)
+void UtilitiesOptions::loadData(string input)
 {	
-	int tempInt;
-	bool tempBool;
+	stringstream strstr(input);
+	strstr >> screenWidth >> screenHeight >> displayItemDescriptions;
 	
-	inputFile >> tempInt;
-	input.screenWidth = tempInt;
-	inputFile >> tempInt;
-	input.screenHeight = tempInt;
-	inputFile >> tempBool;
-	input.displayItemDescriptions = tempBool;
-	
-	inputFile.ignore(1);
-	return inputFile;
+	char test;
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with UtilitiesOptions::loadData().\n";
 }
 
 string areaToString(Area input)

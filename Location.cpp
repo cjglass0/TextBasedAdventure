@@ -58,3 +58,22 @@ void Location::processWait(string input)
 	else
 		cout << "Error: processWait() was forced to handle an unknown input.\n";
 }
+
+string Location::saveLocationData()
+{
+	stringstream output;
+	output << IsDay << '\n' << ENDMARKER << '\n';
+	return output.str();
+}
+
+void Location::loadLocationData(string input)
+{
+	stringstream strstr(input);
+	strstr >> IsDay;
+	
+	char test;
+	strstr.ignore(1);
+	strstr >> test;
+	if (test != ENDMARKER)
+		cout << "Error: Something went wrong with Location::loadData().\n";	
+}

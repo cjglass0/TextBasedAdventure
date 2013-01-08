@@ -1,15 +1,6 @@
 #include "Game.h"
 #include "Menu.h"
 
-#define TEMPAREAS \
-UtilitiesOptions tempUO; \
-Menu tempM(PC); \
-TownCenter temp1; \
-TownHall temp2; \
-TownHallLobby temp3; \
-ThiefsHouse temp4; \
-ThiefsHouseInterior temp5; \
-
 Location* Game::locationMaker(Area input)
 {
 	switch (input) {
@@ -53,14 +44,16 @@ void Game::run()
 				getline(testStream, tester);
 				if (tester != "start_save_file") {
 					stringstream output;
-					output << "Error:  " << filename << " is not the name of a valid save file.\n";
+					output << "Sorry, " << filename << " is not the name of a valid save file.\n";
 					display(output.str());
 					break;
 				}
 				testStream.close();
 				
-				loadGame(filename, PC);
-				playGame(filename);
+				if (loadGame(filename, PC) == ERROR)
+					cout << "Error:  something went wrong with loadGame().\n";
+				else
+					playGame(filename);
 				
 				break;
 			default:
@@ -71,46 +64,80 @@ void Game::run()
 	display("\nGood bye!  Thanks for playing!\n\n");
 }
 
-void Game::loadGame(string filename, Player &PC)
-{
-	ifstream file(filename.c_str());
-	
-	string tempString;
-	getline(file, tempString); // clears the "start_save_file"
-	
-	bool tempBool;
-	file >> tempBool;
-	Location::setIsDay(tempBool);
-		
-	file.ignore(1);
-
-	file >> PC;
-	
-	TEMPAREAS
-	
-	file >> tempUO;
-	file >> tempM;
-	
-	file >> temp1 >> temp2 >> temp3 >> temp4 >> temp5;
-}
-
 void Game::saveGame(string filename, Player &PC)
 {
 	ofstream file(filename.c_str());
 	file << "start_save_file\n";
-	file << Location::getIsDay() << '\n';
+	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData() << Location::saveLocationData();	
 	
-	file << PC;
-	
-	TEMPAREAS
-	
-	file << tempUO;
-	file << tempM;
-	
-	file << temp1 << temp2 << temp3 << temp4 << temp5;
+	Location *temp;
+	for (int i = ((int) AREASTARTMARKER) + 1; i < ((int) AREAENDMARKER); i++) {
+		temp = locationMaker((Area) i);
+		file << temp->saveData();
+		delete temp;
+	}
+
 	file << "end_of_save_file\n";
 }
+
+#define GETDATAFORLOAD \
+input.str(""); \
+do { \
+	getline(file, tempString); \
+	input << tempString << '\n'; \
+} while (tempString[0] != ENDMARKER); \
+
+status Game::loadGame(string filename, Player &PC)
+{
+	ifstream file(filename.c_str());
 	
+	string tempString;
+	getline(file, tempString);
+	
+	if (tempString != "start_save_file") {
+		cout << "Error: loadGame given improper save file.\n";
+		return ERROR;
+	}
+
+	stringstream input;
+	
+	GETDATAFORLOAD
+	UtilitiesOptions::loadData(input.str());
+	
+	GETDATAFORLOAD
+	PC.loadData(input.str());
+	
+	GETDATAFORLOAD
+	Menu::loadData(input.str());
+	
+	GETDATAFORLOAD
+	Location::loadLocationData(input.str());
+	
+	Area i = ((Area) (((int) AREASTARTMARKER) + 1));
+	Location *tempLocation;
+	
+	input.str("");
+	getline(file, tempString);
+	input << tempString << '\n';
+	while ((input.str() != "end_of_save_file") && (i < AREAENDMARKER)) {
+		while (tempString[0] != ENDMARKER) {
+			getline(file, tempString);
+			input << tempString << '\n';
+		}
+		
+		tempLocation = locationMaker((Area) i);
+		tempLocation->loadData(input.str());
+		delete tempLocation;
+		
+		i = ((Area) (((int) i) + 1));
+		
+		input.str("");
+		getline(file, tempString);
+		input << tempString;
+	}
+	
+	return OK;
+}	
 
 void Game::playGame(string filename)
 {	
@@ -143,14 +170,22 @@ void Game::playGame(string filename)
 			Menu menu(PC);
 			menu.pauseMenu();
 		} else if (input == "save") { 
-			while (filename == "") {
+			if (filename == "") {
 				display("Enter a name for your save file:\n");
 				getline(cin, filename);
 				if (filename == "")
-					display("Invalid name.  Try again.\n");
+					display("Invalid file name.\n");
+				else {
+					saveGame(filename, PC);
+					display("\nSaved successfully.\n");
+				}
+			} else {
+				saveGame(filename, PC);
+
+				stringstream output;
+				output << "Saved successfully to file \"" << filename << "\".\n";
+				display(output.str());
 			}
-			saveGame(filename, PC);
-			display("Saved successfully.\n");
 		} else {
 			location->getCommand(input, PC);
 			if (PC.isDead())

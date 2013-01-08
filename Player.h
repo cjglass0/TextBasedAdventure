@@ -33,8 +33,8 @@ public:
 	int removeFromInventory(string name, uint quantity = 1);
 	string inventoryToString() const;
 	
-	friend ostream& operator<<(ostream &output, Player &input);
-	friend ifstream& operator>>(ifstream &inputFile, Player &input);
+	string saveData();
+	void loadData(string input);
 };
 
 #endif
