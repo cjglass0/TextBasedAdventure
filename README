@@ -1,0 +1,11 @@
+Right now, I'm developing the code for the game engine.  Everything in the world itself, like the areas and the items, exist solely as contrived situations to test that code as I develop it.  Development of the world itself will come after the engine is working and optimal.
+
+The general "architecture" of the code is:
+Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
+
+Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
+
+To-do:
+-Add the code to check whether a file exists before saving to saveGame(); it has space for it.  Make saveGame() return a status and have the code that calls it set filename as "" if the status returned is an error.
+-Consolidate the common code in the save and load functions.
+-Add code to prompt the player to save before quitting if they didn't do so last turn.
