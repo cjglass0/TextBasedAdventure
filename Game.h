@@ -11,6 +11,7 @@ private:
 	
 	Location *locationMaker(Area input);
 	
+	void saveGameWrapper(string &filename, Player &PC);
 	void saveGame(string filename, Player &PC);
 	status loadGame(string filename, Player &PC);
 	void playGame(string filename = "");
