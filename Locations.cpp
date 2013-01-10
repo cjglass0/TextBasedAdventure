@@ -239,7 +239,7 @@ void ThiefsHouse::loadData(string input)
 	char test;
 	strstr >> test;
 	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with TownCenter::loadData().\n";
+		cout << "Error: Something went wrong with ThiefsHouse::loadData().\n";
 }
 
 /*
@@ -316,5 +316,5 @@ void ThiefsHouseInterior::loadData(string input)
 	char test;
 	strstr >> test;
 	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with TownHallLobby::loadData().\n";
+		cout << "Error: Something went wrong with ThiefsHouseInterior::loadData().\n";
 }

@@ -10,7 +10,7 @@ Location* Game::locationMaker(Area input)
 		case THIEFSHOUSE:			return new ThiefsHouse;
 		case THIEFSHOUSEINTERIOR:	return new ThiefsHouseInterior;
 		default:
-			display("Error: locationMaker() was given an invalid location and didn't return anything.  It is very likely that the program will crash if you do anything other than quit right now.\n");
+			cout << "Error: locationMaker() was given an invalid location and didn't return anything.  It is very likely that the program will crash if you do anything other than quit right now.\n";
 			break;
 	}
 }
@@ -19,13 +19,13 @@ Game::Game() : PC(StartingLocation) {}
 
 void Game::run()
 {
-	int selection = 1;
+	int selection = -1;
 	string filename, tester;
 	ifstream testStream;
 	
 	display("\nWelcome to the adventure game!\n");
 	
-	while(selection != 0) {
+	while ((selection < 0) || (selection > 2)) {
 		display("\nWhat will you do?\n 1. New game\n 2. Load game\n 0. Quit game\n");
 		selection = getSelection();
 		switch (selection) {
@@ -37,15 +37,16 @@ void Game::run()
 			case 0:
 				break;
 			case 2:
-				display("What is the name of your save file?\n");
+				display("\nWhat is the name of your save file?\n");
 				getline(cin, filename);
 				
 				testStream.open(filename.c_str());
 				getline(testStream, tester);
 				if (tester != "start_save_file") {
 					stringstream output;
-					output << "Sorry, " << filename << " is not the name of a valid save file.\n";
+					output << "Sorry, " << filename << " is not the name of a valid save file.  Try again.\n";
 					display(output.str());
+					selection = -1;
 					break;
 				}
 				testStream.close();
@@ -53,6 +54,7 @@ void Game::run()
 				if (loadGame(filename, PC) == ERROR)
 					cout << "Error:  something went wrong with loadGame().\n";
 				else
+					cout << endl;
 					playGame(filename);
 				
 				break;
@@ -106,13 +108,13 @@ status Game::loadGame(string filename, Player &PC)
 	
 	GETDATAFORLOAD
 	PC.loadData(input.str());
-	
+		
 	GETDATAFORLOAD
 	Menu::loadData(input.str());
 	
 	GETDATAFORLOAD
 	Location::loadLocationData(input.str());
-	
+		
 	Area i = ((Area) (((int) AREASTARTMARKER) + 1));
 	Location *tempLocation;
 	
@@ -124,8 +126,8 @@ status Game::loadGame(string filename, Player &PC)
 			getline(file, tempString);
 			input << tempString << '\n';
 		}
-		
-		tempLocation = locationMaker((Area) i);
+				
+		tempLocation = locationMaker(i);
 		tempLocation->loadData(input.str());
 		delete tempLocation;
 		
@@ -133,7 +135,7 @@ status Game::loadGame(string filename, Player &PC)
 		
 		input.str("");
 		getline(file, tempString);
-		input << tempString;
+		input << tempString << '\n';
 	}
 	
 	return OK;
@@ -176,8 +178,38 @@ void Game::playGame(string filename)
 				if (filename == "")
 					display("Invalid file name.\n");
 				else {
-					saveGame(filename, PC);
-					display("\nSaved successfully.\n");
+					ifstream testfile(filename.c_str());
+					
+					if (! testfile) {
+						testfile.close();
+						
+						saveGame(filename, PC);
+						display("\nSaved successfully (new file written).\n");
+					} else {
+						string teststring;
+						
+						getline(testfile, teststring);
+						testfile.close();
+						
+						if (teststring == "start_save_file") {
+						
+							stringstream tempstrstr;
+							tempstrstr << "\n\"" << filename << "\" already exists as a save file.  Would you like to override it?\n 1. Yes\n 0. No\n";
+							display(tempstrstr.str());
+							
+							int selection = getSelection();
+							if (selection == 1) {
+								display("\nFile overwritten.  Saved successfully.\n");
+								saveGame(filename, PC);
+							} else {
+								display("\nFile not overwritten.  No data saved.\n");
+								filename = "";
+							}
+						} else {
+							display("\nThat file already exists, and it's not a save file, so it can't be overwritten.  No data saved.\n");
+							filename = "";
+						}
+					}
 				}
 			} else {
 				saveGame(filename, PC);

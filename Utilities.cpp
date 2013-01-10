@@ -31,7 +31,8 @@ string areaToString(Area input)
 		case THIEFSHOUSE:			return "Thief's House";
 		case THIEFSHOUSEINTERIOR:	return "Thief's House Interior";
 		default:
-			return "Error: areaToString() received improper input.\n";
+			cout << "Error: areaToString() received improper input.\n";
+			return "";
 	}
 }
 

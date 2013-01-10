@@ -17,7 +17,7 @@ Item Player::getItem(string name) const
 	if (isInInventory(name))
 		return Inventory.find(name)->second;
 	else {
-		display("Error: getItem() given input on an item that wasn't in the inventory.\n");
+		cout << "Error: getItem() given input on an item that wasn't in the inventory.\n";
 		return ERRORITEM;
 	}
 }
