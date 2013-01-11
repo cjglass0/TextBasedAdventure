@@ -66,7 +66,7 @@ void Game::run()
 	display("\nGood bye! Thanks for playing!\n\n");
 }
 
-void Game::saveGame(string filename, Player &PC)
+void Game::saveData(string filename, Player &PC)
 {
 	ofstream file(filename.c_str());
 	file << "start_save_file\n";
@@ -82,21 +82,24 @@ void Game::saveGame(string filename, Player &PC)
 	file << "end_of_save_file\n";
 }
 
-void Game::saveGameWrapper(string &filename, Player &PC)
+status Game::saveGame(string &filename, Player &PC)
 {
 	if (filename == "") {
 		display("Enter a name for your save file (press enter to cancel process):\n");
 		getline(cin, filename);
-		if (filename == "")
+		if (filename == "") {
 			display("No data saved.\n");
+			return ERROR;
+		}
 		else {
 			ifstream testfile(filename.c_str());
 			
 			if (! testfile) {
 				testfile.close();
 				
-				saveGame(filename, PC);
+				saveData(filename, PC);
 				display("\nSaved successfully (new file written).\n");
+				return OK;
 			} else {
 				string teststring;
 				
@@ -111,24 +114,29 @@ void Game::saveGameWrapper(string &filename, Player &PC)
 					
 					int selection = getSelection();
 					if (selection == 1) {
+						saveData(filename, PC);
 						display("\nFile overwritten. Saved successfully.\n");
-						saveGame(filename, PC);
+						return OK;
 					} else {
 						display("\nFile not overwritten. No data saved.\n");
 						filename = "";
+						return ERROR;
 					}
 				} else {
 					display("\nThat file already exists, and it's not a save file, so it can't be overwritten. No data saved.\n");
 					filename = "";
+					return ERROR;
 				}
 			}
 		}
 	} else {
-		saveGame(filename, PC);
+		saveData(filename, PC);
 		
 		stringstream output;
 		output << "Saved successfully to file \"" << filename << "\".\n";
 		display(output.str());
+		
+		return OK;
 	}
 }
 
@@ -205,6 +213,7 @@ void Game::playGame(string filename)
 		location->displayDescription();
 	
 	string input;
+	int savedOnLastTurn = 1;
 	
 	while (true) {
 		if (Menu::getDisplayActions()) {
@@ -217,13 +226,31 @@ void Game::playGame(string filename)
 		cout << endl;
 		
 		if (input == "quit" || input == "0") {
-			cout << "And thus your adventure comes to a close for the day.\n";
-			break;
+			bool quitIt = false;
+			
+			if (savedOnLastTurn > 0) {
+				quitIt = true;
+			} else {
+				display("Would you like to save before you quit?\n 1. Yes\n 0. No\n");
+				int selection = getSelection();
+				if (selection == 1) {
+					if (saveGame(filename, PC) == OK)
+						quitIt = true;
+				} else if (selection == 0)
+					quitIt = true;
+			}
+			if (quitIt) {
+				if (savedOnLastTurn <= 0)
+					cout << '\n';
+				display("And thus your adventure comes to a close for the day.\n");
+				return;
+			}
 		} else if (input == "menu") {
 			Menu menu(PC);
 			menu.pauseMenu();
 		} else if (input == "save") {
-			saveGameWrapper(filename, PC);
+			if (saveGame(filename, PC) == OK)
+				savedOnLastTurn = 2;
 		} else {
 			location->getCommand(input, PC);
 			if (PC.isDead())
@@ -240,5 +267,8 @@ void Game::playGame(string filename)
 					location->displayDescription();
 			}
 		}
+		
+		if (savedOnLastTurn > 0)
+			--savedOnLastTurn;
 	}
 }
