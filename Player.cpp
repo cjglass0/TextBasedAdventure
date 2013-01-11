@@ -148,5 +148,4 @@ void Player::loadData(string input)
 	}
 	
 	LOADDATACHECK("Player")
-	
 }

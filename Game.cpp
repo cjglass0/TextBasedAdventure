@@ -4,10 +4,10 @@
 Location* Game::locationMaker(Area input)
 {
 	switch (input) {
-		case TOWNCENTER:	return new TownCenter;
-		case TOWNHALL:	return new TownHall;
-		case TOWNHALLLOBBY:	return new TownHallLobby;
-		case THIEFSHOUSE:	return new ThiefsHouse;
+		case TOWNCENTER:			return new TownCenter;
+		case TOWNHALL:				return new TownHall;
+		case TOWNHALLLOBBY:			return new TownHallLobby;
+		case THIEFSHOUSE:			return new ThiefsHouse;
 		case THIEFSHOUSEINTERIOR:	return new ThiefsHouseInterior;
 		default:
 			cout << "Error: locationMaker() was given an invalid location and didn't return anything. It is very likely that the program will crash if you do anything other than quit right now.\n";
@@ -15,7 +15,10 @@ Location* Game::locationMaker(Area input)
 	}
 }
 
-Game::Game() : PC(StartingLocation) {}
+Game::Game() : PC(StartingLocation)
+{
+	saveDefaultData();
+}
 
 void Game::run()
 {
@@ -25,14 +28,14 @@ void Game::run()
 	
 	display("\nWelcome to the adventure game!\n");
 	
-	while ((selection < 0) || (selection > 2)) {
+	while (selection != 0) {
 		display("\nWhat will you do?\n 1. New game\n 2. Load game\n 0. Quit game\n");
 		selection = getSelection();
 		switch (selection) {
 			case 1:
-				PC = Player(StartingLocation);
-				cout << endl;
-				playGame();
+				cout << '\n';
+				if (loadDefaultData() == OK)
+					playGame();
 				break;
 			case 0:
 				break;
@@ -51,10 +54,10 @@ void Game::run()
 				}
 				testStream.close();
 				
-				if (loadGame(filename, PC) == ERROR)
+				if (loadGame(filename) == ERROR)
 					cout << "Error: something went wrong with loadGame().\n";
 				else
-					cout << endl;
+					cout << '\n';
 				playGame(filename);
 				
 				break;
@@ -66,23 +69,33 @@ void Game::run()
 	display("\nGood bye! Thanks for playing!\n\n");
 }
 
-void Game::saveData(string filename, Player &PC)
+#define SAVEDATABODY(file) \
+	file << "start_save_file\n"; \
+	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData() << Location::saveLocationData(); \
+\
+	Location *temp; \
+	for (int i = ((int) AREASTARTMARKER) + 1; i < ((int) AREAENDMARKER); i++) { \
+		temp = locationMaker((Area) i); \
+		file << temp->saveData(); \
+		delete temp; \
+	} \
+\
+	file << "end_of_save_file\n"; \
+
+void Game::saveData(string filename)
 {
 	ofstream file(filename.c_str());
-	file << "start_save_file\n";
-	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData() << Location::saveLocationData();	
-	
-	Location *temp;
-	for (int i = ((int) AREASTARTMARKER) + 1; i < ((int) AREAENDMARKER); i++) {
-		temp = locationMaker((Area) i);
-		file << temp->saveData();
-		delete temp;
-	}
-	
-	file << "end_of_save_file\n";
+	SAVEDATABODY(file)
 }
 
-status Game::saveGame(string &filename, Player &PC)
+void Game::saveDefaultData()
+{
+	stringstream strstr;
+	SAVEDATABODY(strstr)
+	defaultData = strstr.str();
+}
+
+status Game::saveGame(string &filename)
 {
 	if (filename == "") {
 		display("Enter a name for your save file (press enter to cancel process):\n");
@@ -97,7 +110,7 @@ status Game::saveGame(string &filename, Player &PC)
 			if (! testfile) {
 				testfile.close();
 				
-				saveData(filename, PC);
+				saveData(filename);
 				display("\nSaved successfully (new file written).\n");
 				return OK;
 			} else {
@@ -114,7 +127,7 @@ status Game::saveGame(string &filename, Player &PC)
 					
 					int selection = getSelection();
 					if (selection == 1) {
-						saveData(filename, PC);
+						saveData(filename);
 						display("\nFile overwritten. Saved successfully.\n");
 						return OK;
 					} else {
@@ -130,7 +143,7 @@ status Game::saveGame(string &filename, Player &PC)
 			}
 		}
 	} else {
-		saveData(filename, PC);
+		saveData(filename);
 		
 		stringstream output;
 		output << "Saved successfully to file \"" << filename << "\".\n";
@@ -140,65 +153,69 @@ status Game::saveGame(string &filename, Player &PC)
 	}
 }
 
-
 #define GETDATAFORLOAD \
-input.str(""); \
-do { \
-getline(file, tempString); \
-input << tempString << '\n'; \
-} while (tempString[0] != ENDMARKER); \
+	input.str(""); \
+	do { \
+		getline(file, tempString); \
+		input << tempString << '\n'; \
+	} while (tempString[0] != ENDMARKER);
 
-status Game::loadGame(string filename, Player &PC)
+#define LOADDATABODY(file, FUNCTIONNAME) \
+	string tempString; \
+	getline(file, tempString); \
+	\
+	if (tempString != "start_save_file") { \
+		cout << "Error: " << FUNCTIONNAME << " given improper save file.\n"; \
+		return ERROR; \
+	} \
+	\
+	stringstream input; \
+	GETDATAFORLOAD \
+	UtilitiesOptions::loadData(input.str()); \
+	GETDATAFORLOAD \
+	PC = Player(StartingLocation); \
+	PC.loadData(input.str()); \
+	GETDATAFORLOAD \
+	Menu::loadData(input.str()); \
+	GETDATAFORLOAD \
+	Location::loadLocationData(input.str()); \
+	\
+	Area i = ((Area) (((int) AREASTARTMARKER) + 1)); \
+	Location *tempLocation; \
+	\
+	input.str(""); \
+	getline(file, tempString); \
+	input << tempString << '\n'; \
+	while ((input.str() != "end_of_save_file") && (i < AREAENDMARKER)) { \
+		while (tempString[0] != ENDMARKER) { \
+			getline(file, tempString); \
+			input << tempString << '\n'; \
+		} \
+		\
+		tempLocation = locationMaker(i); \
+		tempLocation->loadData(input.str()); \
+		delete tempLocation; \
+		\
+		i = ((Area) (((int) i) + 1)); \
+		\
+		input.str(""); \
+		getline(file, tempString); \
+		input << tempString << '\n'; \
+	} \
+	\
+	return OK;
+	
+status Game::loadGame(string filename)
 {
 	ifstream file(filename.c_str());
-	
-	string tempString;
-	getline(file, tempString);
-	
-	if (tempString != "start_save_file") {
-		cout << "Error: loadGame given improper save file.\n";
-		return ERROR;
-	}
-	
-	stringstream input;
-	
-	GETDATAFORLOAD
-	UtilitiesOptions::loadData(input.str());
-	
-	GETDATAFORLOAD
-	PC.loadData(input.str());
-	
-	GETDATAFORLOAD
-	Menu::loadData(input.str());
-	
-	GETDATAFORLOAD
-	Location::loadLocationData(input.str());
-	
-	Area i = ((Area) (((int) AREASTARTMARKER) + 1));
-	Location *tempLocation;
-	
-	input.str("");
-	getline(file, tempString);
-	input << tempString << '\n';
-	while ((input.str() != "end_of_save_file") && (i < AREAENDMARKER)) {
-		while (tempString[0] != ENDMARKER) {
-			getline(file, tempString);
-			input << tempString << '\n';
-		}
-		
-		tempLocation = locationMaker(i);
-		tempLocation->loadData(input.str());
-		delete tempLocation;
-		
-		i = ((Area) (((int) i) + 1));
-		
-		input.str("");
-		getline(file, tempString);
-		input << tempString << '\n';
-	}
-	
-	return OK;
-}	
+	LOADDATABODY(file, "loadGame")
+}
+
+status Game::loadDefaultData()
+{
+	stringstream file(defaultData);
+	LOADDATABODY(file, "loadDefaultData")
+}
 
 void Game::playGame(string filename)
 {	
@@ -217,13 +234,13 @@ void Game::playGame(string filename)
 	
 	while (true) {
 		if (Menu::getDisplayActions()) {
-			cout << endl;
+			cout << '\n';
 			location->displayActions(PC);
 		}
 		
-		cout << endl <<"What will you do?\n";
+		cout << "\nWhat will you do?\n";
 		getline(cin, input);
-		cout << endl;
+		cout << '\n';
 		
 		if (input == "quit" || input == "0") {
 			bool quitIt = false;
@@ -234,7 +251,7 @@ void Game::playGame(string filename)
 				display("Would you like to save before you quit?\n 1. Yes\n 0. No\n");
 				int selection = getSelection();
 				if (selection == 1) {
-					if (saveGame(filename, PC) == OK)
+					if (saveGame(filename) == OK)
 						quitIt = true;
 				} else if (selection == 0)
 					quitIt = true;
@@ -249,7 +266,7 @@ void Game::playGame(string filename)
 			Menu menu(PC);
 			menu.pauseMenu();
 		} else if (input == "save") {
-			if (saveGame(filename, PC) == OK)
+			if (saveGame(filename) == OK)
 				savedOnLastTurn = 2;
 		} else {
 			location->getCommand(input, PC);

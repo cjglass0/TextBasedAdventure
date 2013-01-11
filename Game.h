@@ -8,12 +8,16 @@
 class Game {
 private:
 	Player PC;
+	string defaultData;
 	
 	Location *locationMaker(Area input);
 	
-	status saveGame(string &filename, Player &PC);
-	void saveData(string filename, Player &PC);
-	status loadGame(string filename, Player &PC);
+	void saveDefaultData();
+	status loadDefaultData();
+	
+	status saveGame(string &filename);
+	void saveData(string filename);
+	status loadGame(string filename);
 	void playGame(string filename = "");
 public:
 	Game();

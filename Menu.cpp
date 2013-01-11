@@ -40,7 +40,7 @@ void Menu::pauseMenu()
 				display("Invalid selection.  Try again.\n");
 		}
 		
-		cout << endl;
+		cout << '\n';
 		if (selection == 0)
 			break;
 	}
@@ -54,7 +54,7 @@ void Menu::inventoryMenu()
 	
 	cout << "\nInvetory:\n" << PC.inventoryToString();
 	if (! PC.emptyInventory())
-		cout << endl;
+		cout << '\n';
 
 	while (! PC.emptyInventory()) {
 		display(selections);
@@ -108,7 +108,7 @@ void Menu::inventoryMenu()
 		}
 		
 		if (selectionNum != 0)
-			cout << endl;
+			cout << '\n';
 		else
 			break;
 	}
@@ -117,7 +117,7 @@ void Menu::inventoryMenu()
 void Menu::optionsMenu()
 {
 	int selection;
-	cout << endl;
+	cout << '\n';
 	while (true) {
 		stringstream output;
 		output << "Options menu:\n 1. Always display area discription after moving:  " << OnOff(DisplayDescription)
@@ -171,7 +171,7 @@ void Menu::optionsMenu()
 				cout << "Invalid selection.  Try again.\n";
 		}
 		if (selection != 0)
-			cout << endl;
+			cout << '\n';
 		else
 			break;
 	}

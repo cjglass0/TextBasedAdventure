@@ -10,7 +10,7 @@ void Location::getCommand(string input, Player &PC)
 			displayActions(PC);
 	} else if (input == "observe") {
 		display(areaToString(here));
-		cout << endl;
+		cout << '\n';
 		displayDescription();
 	} else if ((input == "wait until day") || (input == "wait until night"))
 		processWait(input);
