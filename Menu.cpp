@@ -17,11 +17,8 @@ void Menu::loadData(string input)
 	stringstream strstr(input);
 	strstr >> DisplayDescription >> DisplayActions;
 	
-	char test;
 	strstr.ignore(1);
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with UtilitiesOptions::loadData().\n";	
+	LOADDATACHECK("Menu")	
 }
 
 void Menu::pauseMenu()

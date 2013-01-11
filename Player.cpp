@@ -147,9 +147,6 @@ void Player::loadData(string input)
 		getline(strstr, tempName);
 	}
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with Player::loadData().\n";
+	LOADDATACHECK("Player")
 	
 }

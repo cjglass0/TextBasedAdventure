@@ -71,9 +71,6 @@ void Location::loadLocationData(string input)
 	stringstream strstr(input);
 	strstr >> IsDay;
 	
-	char test;
 	strstr.ignore(1);
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with Location::loadData().\n";	
+	LOADDATACHECK("Location")	
 }

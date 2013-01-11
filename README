@@ -6,5 +6,6 @@ Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
 Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
 
 To-do:
--Consolidate the common code in the save and load functions.
 -Add code to prompt the player to save before quitting if they didn't do so last turn.
+-Add code to reset all saved data when newGame is called, so that Game::run() can be looped again.  Perhaps have it save all data to a string the program is first called, then reload from that?  That's the most portable option, and it'll require the least amount of work in the future.  Or else just write default() functions for everything with static data.
+-Make the code to display all possible actions also display the ones that don't do anything.

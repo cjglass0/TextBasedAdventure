@@ -23,4 +23,12 @@ enum status {OK = 1, ERROR = 0};
 
 #define ENDMARKER '%' // Defines the character used to mark the end of a line/block of saved data.
 
+// Place at the end of every load function, with CLASSNAME being a string that is the class's name.  Depends on the stringstream being named strstr.
+#define LOADDATACHECK(CLASSNAME) \
+	char test; \
+	strstr >> test; \
+	if (test != ENDMARKER) \
+		cout << "Error: Something went wrong with " << CLASSNAME << "::loadData().\n";
+
+
 #endif

@@ -16,10 +16,7 @@ void UtilitiesOptions::loadData(string input)
 	stringstream strstr(input);
 	strstr >> screenWidth >> screenHeight >> displayItemDescriptions;
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with UtilitiesOptions::loadData().\n";
+	LOADDATACHECK("UtilitiesOptions")
 }
 
 string areaToString(Area input)

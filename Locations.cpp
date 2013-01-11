@@ -50,10 +50,7 @@ void TownCenter::loadData(string input)
 	stringstream strstr(input);
 	getline(strstr, description);
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with TownCenter::loadData().\n";
+	LOADDATACHECK("TownCenter");
 }
 
 /* 
@@ -123,10 +120,7 @@ void TownHall::loadData(string input)
 	strstr.ignore(1);
 	getline(strstr, description);
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with TownHall::loadData().\n";
+	LOADDATACHECK("TownHall")
 }
 
 /*
@@ -185,10 +179,7 @@ void TownHallLobby::loadData(string input)
 	strstr.ignore(1);
 	getline(strstr, description);
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with TownHallLobby::loadData().\n";
+	LOADDATACHECK("TownHallLobby")
 }
 
 /*
@@ -236,10 +227,7 @@ void ThiefsHouse::loadData(string input)
 	stringstream strstr(input);
 	getline(strstr, description);
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with ThiefsHouse::loadData().\n";
+	LOADDATACHECK("ThiefsHouse")
 }
 
 /*
@@ -313,8 +301,5 @@ void ThiefsHouseInterior::loadData(string input)
 	strstr.ignore(1);
 	getline(strstr, description);
 	
-	char test;
-	strstr >> test;
-	if (test != ENDMARKER)
-		cout << "Error: Something went wrong with ThiefsHouseInterior::loadData().\n";
+	LOADDATACHECK("ThiefsHouseInterior")
 }
