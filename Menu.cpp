@@ -23,8 +23,8 @@ void Menu::loadData(string input)
 
 void Menu::pauseMenu()
 {
-	int selection;
-	while (true) {
+	int selection = 0;
+	do {
 		display("Main menu:\n 1. View inventory\n 2. Options\n 0. Exit\n");
 		selection = getSelection();
 		switch (selection) {
@@ -39,11 +39,8 @@ void Menu::pauseMenu()
 			default:
 				display("Invalid selection.  Try again.\n");
 		}
-		
 		cout << '\n';
-		if (selection == 0)
-			break;
-	}
+	} while (selection != 0);
 }
 
 void Menu::inventoryMenu()
