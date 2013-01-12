@@ -40,26 +40,28 @@ void Game::run()
 			case 0:
 				break;
 			case 2:
-				display("\nWhat is the name of your save file?\n");
+				display("\nWhat is the name of your save file? (press enter to cancel)\n");
 				getline(cin, filename);
 				
 				testStream.open(filename.c_str());
 				getline(testStream, tester);
-				if (tester != "start_save_file") {
-					stringstream output;
-					output << "Sorry, " << filename << " is not the name of a valid save file. Try again.\n";
-					display(output.str());
-					selection = -1;
-					break;
+				if (filename != "") {
+					if (tester != "start_save_file") {
+						stringstream output;
+						output << "\nSorry, " << filename << " is not the name of a valid save file.  Try again.\n";
+						display(output.str());
+						selection = -1;
+						break;
+					}
+					testStream.close();
+				
+					if (loadGame(filename) == ERROR)
+						cout << "Error: something went wrong with loadGame().\n";
+					else {
+						cout << '\n';
+						playGame(filename);
+					}
 				}
-				testStream.close();
-				
-				if (loadGame(filename) == ERROR)
-					cout << "Error: something went wrong with loadGame().\n";
-				else
-					cout << '\n';
-				playGame(filename);
-				
 				break;
 			default:
 				display("Invalid selection. Try again.\n");

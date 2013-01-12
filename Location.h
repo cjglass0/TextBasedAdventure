@@ -14,7 +14,7 @@ protected:
 	const Area here;
 	static bool IsDay;
 	
-	Location(Area input);
+	Location(Area input); 
 	virtual string getActions(Player &PC) = 0; // Displays all possible actions unique to the area. Each listed action should start with a space and end with a newline character.
 public:
 	Area getArea() const {return here;}
