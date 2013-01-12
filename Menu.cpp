@@ -25,7 +25,7 @@ void Menu::pauseMenu()
 {
 	int selection;
 	while (true) {
-		display("Main menu (enter the number corresponding to your selection):\n 1. View inventory\n 2. Options\n 0. Exit\n");
+		display("Main menu:\n 1. View inventory\n 2. Options\n 0. Exit\n");
 		selection = getSelection();
 		switch (selection) {
 			case 0:

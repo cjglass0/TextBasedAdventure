@@ -29,7 +29,7 @@ void Game::run()
 	display("\nWelcome to the adventure game!\n");
 	
 	while (selection != 0) {
-		display("\nWhat will you do?\n 1. New game\n 2. Load game\n 0. Quit game\n");
+		display("\nWhat will you do? (enter the number corresponding to your selection)\n 1. New game\n 2. Load game\n 0. Quit game\n");
 		selection = getSelection();
 		switch (selection) {
 			case 1:
