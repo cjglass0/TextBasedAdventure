@@ -127,5 +127,5 @@ uint digits(uint input)
 	if (input == 0)
 		return 1;
 	else
-		return ((int) log10(input)) + 1;
+		return ((uint) log10(input)) + 1;
 }
