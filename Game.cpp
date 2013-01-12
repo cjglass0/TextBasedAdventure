@@ -22,13 +22,13 @@ Game::Game() : PC(StartingLocation)
 
 void Game::run()
 {
-	int selection = -1;
+	int selection;
 	string filename, tester;
 	ifstream testStream;
 	
 	display("\nWelcome to the adventure game!\n");
 	
-	while (selection != 0) {
+	do {
 		display("\nWhat will you do? (enter the number corresponding to your selection)\n 1. New game\n 2. Load game\n 0. Quit game\n");
 		selection = getSelection();
 		switch (selection) {
@@ -67,7 +67,8 @@ void Game::run()
 				display("Invalid selection. Try again.\n");
 				break;
 		}
-	}
+	} while (selection != 0);
+	
 	display("\nGood bye! Thanks for playing!\n\n");
 }
 
@@ -182,23 +183,23 @@ status Game::saveGame(string &filename)
 	GETDATAFORLOAD \
 	Location::loadLocationData(input.str()); \
 	\
-	Area i = ((Area) (((int) AREASTARTMARKER) + 1)); \
+	int i = ((int) AREASTARTMARKER) + 1; \
 	Location *tempLocation; \
 	\
 	input.str(""); \
 	getline(file, tempString); \
 	input << tempString << '\n'; \
-	while ((input.str() != "end_of_save_file") && (i < AREAENDMARKER)) { \
+	while ((input.str() != "end_of_save_file") && (i < (int) AREAENDMARKER)) { \
 		while (tempString[0] != ENDMARKER) { \
 			getline(file, tempString); \
 			input << tempString << '\n'; \
 		} \
 		\
-		tempLocation = locationMaker(i); \
+		tempLocation = locationMaker((Area) i); \
 		tempLocation->loadData(input.str()); \
 		delete tempLocation; \
 		\
-		i = ((Area) (((int) i) + 1)); \
+		i++; \
 		\
 		input.str(""); \
 		getline(file, tempString); \

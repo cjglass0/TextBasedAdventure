@@ -52,8 +52,10 @@ void Menu::inventoryMenu()
 	cout << "\nInvetory:\n" << PC.inventoryToString();
 	if (! PC.emptyInventory())
 		cout << '\n';
+	else
+		return;
 
-	while (! PC.emptyInventory()) {
+	do {
 		display(selections);
 		selectionNum = getSelection();
 		switch (selectionNum) {
@@ -106,16 +108,14 @@ void Menu::inventoryMenu()
 		
 		if (selectionNum != 0)
 			cout << '\n';
-		else
-			break;
-	}
+	} while ((selectionNum != 0) && (! PC.emptyInventory()));
 }
 
 void Menu::optionsMenu()
 {
 	int selection;
 	cout << '\n';
-	while (true) {
+	do {
 		stringstream output;
 		output << "Options menu:\n 1. Always display area discription after moving:  " << OnOff(DisplayDescription)
 			<< "\n 2. Always display actions on a new turn:  " << OnOff(DisplayActions)
@@ -169,7 +169,5 @@ void Menu::optionsMenu()
 		}
 		if (selection != 0)
 			cout << '\n';
-		else
-			break;
-	}
+	} while (selection != 0);
 }

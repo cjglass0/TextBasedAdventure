@@ -5,5 +5,18 @@ Globals -> Utilities -> Item -> Player -> Menu -> Location -> Locations -> Game
 
 Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
 
+Notes for developer
+
 To-do:
 Change all the while-loops that have a manual break at the end into do-while-loops.
+
+Progression of items:
+Rusty Sword
+Lantern
+Bow
+Bombs
+Bandit's Sword (allows defense against more deft foes)
+Grappling Hook
+[Modified] Bow (capable of attaching lantern for fire arrows)
+Crossbow (capable of shooting bomb arrows)
+Sanctified Sword (allows defense against very powerful foes)
