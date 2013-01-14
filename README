@@ -1,4 +1,4 @@
-I've finished developing the code for the game engine.  Presently, everything in the world itself, i.e. the locations and the items, are contrived situations that existed to test the code as I was developing it.  Development of the world itself will start soon.
+With the first draft of the game's engine now finished, I've started developing the game's world.
 
 The general "architecture" of the code is Globals -> Utilities -> Item -> Player.  Player leads into Menu and Location.  Location leads into all of the LocationX files, which are consolidated in Locations.h, which, along with Menu, leads into Game, finishing with Main.cpp.
 
