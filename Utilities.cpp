@@ -22,11 +22,12 @@ void UtilitiesOptions::loadData(string input)
 string areaToString(Area input)
 {
 	switch (input) {
-		case TOWNCENTER:			return "Town Center";
-		case TOWNHALL:				return "Town Hall";
-		case TOWNHALLLOBBY:			return "Town Hall Lobby";
-		case THIEFSHOUSE:			return "Thief's House";
-		case THIEFSHOUSEINTERIOR:	return "Thief's House Interior";
+		case ELFFORMYHOUSEINTERIOR: return "Elffor: my house (interior)";
+		case ELFFORMYHOUSE:			return "Elffor: my house";
+		case ELFFORTOWNGATE:		return "Elffor: town gate";
+		case ELFFORTAVERN:			return "Elffor: tavern";
+		case ELFFORTAVERNINTERIOR:	return "Elffor: tavern (interior)";
+		case ROADTOELFFORA:			return "Road to Elffor";
 		default:
 			cout << "Error: areaToString() received improper input.\n";
 			return "";
@@ -96,6 +97,13 @@ int getSelection()
 		return -99;
 	
 	return selection;
+}
+
+void enterToContinue()
+{
+	string temp;
+	display("\n(press enter to continue)");
+	getline(cin, temp);
 }
 
 int stringComp(string leftComp, string rightComp)

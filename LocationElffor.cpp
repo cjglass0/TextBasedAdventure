@@ -36,7 +36,7 @@ void ElfforMyHouseInterior::displayDescription()
 
 status ElfforMyHouseInterior::processCommand(string input)
 {
-	if (input == "leave")
+	if ((input == "leave") || (input == "leave house"))
 		PC.setCurrentLocation(ELFFORMYHOUSE);
 	else if (input == "sleep in bed") {
 		if (IsDay) {
@@ -140,7 +140,9 @@ status ElfforTownGate::processCommand(string input)
 		display("WARNING:\nWild wolves have been spotted roaming outside of the town fence.  They will attack unprotected travelers.\
   If you are travelling alone, bring something to defend yourself with.\n");
 		enterToContinue();
-	} else if (input == "go to my house")
+	} else if (input == "leave town")
+		PC.setCurrentLocation(ROADTOELFFORA);
+	else if (input == "go to my house")
 		PC.setCurrentLocation(ELFFORMYHOUSE);
 	else if (input == "go to tavern")
 		PC.setCurrentLocation(ELFFORTAVERN);
@@ -151,7 +153,7 @@ status ElfforTownGate::processCommand(string input)
 
 string ElfforTownGate::getActions()
 {
-	return " read sign\n go to my house\n go to tavern\n";
+	return " read sign\n leave town\n go to my house\n go to tavern\n";
 }
 
 string ElfforTownGate::saveData()
@@ -227,7 +229,7 @@ void ElfforTavernInterior::displayDescription()
 
 status ElfforTavernInterior::processCommand(string input)
 {
-	if (input == "leave")
+	if ((input == "leave") || (input == "leave tavern"))
 		PC.setCurrentLocation(ELFFORTAVERN);
 	else if (IsDay) {
 		if (input == "talk to Trent") {

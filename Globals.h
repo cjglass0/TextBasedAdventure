@@ -13,9 +13,9 @@ using namespace std;
 
 typedef unsigned int uint;
 
-#define OnOff(X) ((X) ? "On" : "Off") // Takes a bool and turns it into an "On" output or an "Off" output.  Used in menus.
+#define OnOff(X) (X ? "On" : "Off") // Takes a bool and turns it into an "On" output or an "Off" output.  Used in menus.
 
-enum Area {TERMINATE = -1, AREASTARTMARKER, ELFFORMYHOUSEINTERIOR, ELFFORMYHOUSE, ELFFORTOWNGATE, ELFFORTAVERN, ELFFORTAVERNINTERIOR, AREAENDMARKER};
+enum Area {TERMINATE = -1, AREASTARTMARKER, ELFFORMYHOUSEINTERIOR, ELFFORMYHOUSE, ELFFORTOWNGATE, ELFFORTAVERN, ELFFORTAVERNINTERIOR, ROADTOELFFORA, AREAENDMARKER};
 #define StartingLocation ELFFORMYHOUSEINTERIOR // Defines the area the game will start you in.
 
 enum status {OK = 1, ERROR = 0};

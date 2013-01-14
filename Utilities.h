@@ -35,6 +35,9 @@ string truncateText(string name, int length, uint quantity = 1);
 // Prompts the user for input.  Returns the integer entered, unless no integer is entered, in which case it returns a -99.
 int getSelection();
 
+// Forces the user to hit enter to continue.
+void enterToContinue();
+
 // Returns 1 if leftComp goes before rightComp in alphabetical order, -1 if rightComp goes before leftComp, and 0 if they're identical.
 int stringComp(string leftComp, string rightComp);
 

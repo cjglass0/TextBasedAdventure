@@ -7,16 +7,12 @@ case AREA: return new class(PC);
 Location* Game::locationMaker(Area input)
 {
 	switch (input) {
-/*		case ELFFORMYHOUSEINTERIOR:	return new ElfforMyHouseInterior;
-		case ELFFORMYHOUSE:			return new ElfforMyHouse;
-		case ELFFORTOWNGATE:		return new ElfforTownGate;
-		case ELFFORTAVERN:			return new ElfforTavern;
-		case ELFFORTAVERNINTERIOR:	return new ElfforTavernInterior; */
 		LMCASE(ELFFORMYHOUSEINTERIOR, ElfforMyHouseInterior)
 		LMCASE(ELFFORMYHOUSE, ElfforMyHouse)
 		LMCASE(ELFFORTOWNGATE, ElfforTownGate)
 		LMCASE(ELFFORTAVERN, ElfforTavern)
 		LMCASE(ELFFORTAVERNINTERIOR, ElfforTavernInterior)
+		LMCASE(ROADTOELFFORA, RoadToElfforA)
 		default:
 			cout << "Error: locationMaker() was given an invalid location and didn't return anything. It is very likely that the program will crash if you do anything other than quit right now.\n";
 			break;
@@ -82,7 +78,9 @@ void Game::run()
 
 #define SAVEDATABODY(file) \
 	file << "start_save_file\n"; \
-	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData() << Location::saveLocationData() << ElfforRegion::saveRegionData();\
+	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData(); \
+	file << Location::saveLocationData() << ElfforRegion::saveRegionData() << RoadToElffor::saveRegionData(); \
+	file << "end_region_data\n" << ENDMARKER << '\n'; \
 \
 	Location *temp; \
 	for (int i = ((int) AREASTARTMARKER) + 1; i < ((int) AREAENDMARKER); i++) { \
@@ -91,7 +89,7 @@ void Game::run()
 		delete temp; \
 	} \
 \
-	file << "end_of_save_file\n"; \
+	file << "end_of_save_file\n";
 
 void Game::saveData(string filename)
 {
@@ -164,6 +162,9 @@ status Game::saveGame(string &filename)
 	}
 }
 
+#define IFREGIONENDNOTREACHED \
+if (((input.str()).substr(0, 15)) != "end_region_data")
+
 #define GETDATAFORLOAD \
 	input.str(""); \
 	do { \
@@ -191,7 +192,13 @@ status Game::saveGame(string &filename)
 	GETDATAFORLOAD \
 	Location::loadLocationData(input.str()); \
 	GETDATAFORLOAD \
+	IFREGIONENDNOTREACHED { \
 	ElfforRegion::loadRegionData(input.str()); \
+	GETDATAFORLOAD \
+	} IFREGIONENDNOTREACHED { \
+		RoadToElffor::loadRegionData(input.str()); \
+		GETDATAFORLOAD \
+	} \
 	\
 	int i = ((int) AREASTARTMARKER) + 1; \
 	Location *tempLocation; \

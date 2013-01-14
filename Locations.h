@@ -4,6 +4,7 @@
 // This file just includes all of the location libraries.
 
 #include "LocationElffor.h"
+#include "LocationRoadToElffor.h"
 
 #endif
 
@@ -13,12 +14,12 @@ void ::displayDescription()
 
 }
 
-status ::processCommand(string input, Player &PC)
+status ::processCommand(string input)
 {
 
 }
 
-string ::getActions(Player &PC)
+string ::getActions()
 {
 
 }

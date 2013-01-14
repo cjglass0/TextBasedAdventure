@@ -17,6 +17,7 @@ public:
 };
 
 #define RUSTYSWORD Item("Rusty sword", "A worn sword from your more adventurous days.  It's unimpressive, but it'll do the job.", true)
+#define LANTERN Item("Lantern", "A basic lantern that emits a strong light, allowing you to see in dark places.", true)
 #define ERRORITEM Item("Error Item", "If you got this item, something in the code went wrong.")
 
 #endif
