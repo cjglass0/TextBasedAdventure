@@ -3,14 +3,14 @@
 
 #include "Globals.h"
 #include "Utilities.h"
-#include "Locations.h"
+#include "Location.h"
 
 class Game {
 private:
 	Player PC;
+	WorldVariables WorldVars;
 	string defaultData;
-	
-	Location *locationMaker(Area input);
+	Area lastLocation;
 	
 	void saveDefaultData();
 	status loadDefaultData();

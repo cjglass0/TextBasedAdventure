@@ -7,3 +7,10 @@ Started on December 5th, 2012.  Many thanks to Daniel Scanlan, who figured out t
 Notes for developer:
 
 To-do:
+-Change the observe function to have all of the current observe functions' bodies in its body, and call the right one based on the PC's location.  Make sure it prints out the areaToString() string for that area.
+-Make the save and load functions for WorldVariables account for reaching the end of a load file, so you don't need to start over every time you add new variables to the struct.
+-Make a dialog function that displays a line of dialog, given to the function via a string as function input, and then calls enterToContinue().  Call is something short like dialog() to make it convenient to use.  Use it in the dialog inside the Elffor tavern.
+(Maybe)
+-Improve the layout of variables in the Action class.
+-Give Location an assignment operator so Game::playGame() can use a stack variable rather than a heap (new) one.
+-Make the constructor for the Action class take a bool& instead of a bool, so an item's visibility can depend on a condition.

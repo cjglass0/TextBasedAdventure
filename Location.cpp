@@ -1,34 +1,101 @@
-#include "Locations.h"
+#include "Location.h"
 #include "Menu.h"
 
-Location::Location(Area input, Player &PCIn) : here(input), PC(PCIn) {}
+Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldVars(WorldVarsIn)
+{
+	bool waitDefined = false;
+	
+	if (PC.getCurrentLocation() == ELFFORMYHOUSEINTERIOR) {
+		Actions.push_back(Action("observe", observeElfforMyHouseInterior));
+		Actions.push_back(Action("leave house", goToElfforMyHouse));
+		Actions.push_back(Action("sleep in bed", ElfforHouseSleepInBed));
+		Actions.push_back(Action("wait until day", ElfforHouseWaitUntilDay, false));
+		Actions.push_back(Action("wait until night", ElfforHouseWaitUntilNight, false));
+		waitDefined = true;
+	} else if (PC.getCurrentLocation() == ELFFORMYHOUSE) {
+		Actions.push_back(Action("observe", observeElfforMyHouse));
+		Actions.push_back(Action("enter house", goToElfforMyHouseInterior));
+		Actions.push_back(Action("go to gate", goToElfforGate));
+		Actions.push_back(Action("go to tavern", goToElfforTavern));
+	} else if (PC.getCurrentLocation() == ELFFORTAVERN) {
+		Actions.push_back(Action("observe", observeElfforTavern));
+		Actions.push_back(Action("enter tavern", ElfforEnterTavern));
+		Actions.push_back(Action("go to my house", goToElfforMyHouse));
+		Actions.push_back(Action("go to gate", goToElfforGate));
+	} else if (PC.getCurrentLocation() == ELFFORTAVERNINTERIOR) {
+		Actions.push_back(Action("observe", observeElfforTavernInterior));
+		Actions.push_back(Action("leave tavern", goToElfforTavern));
+		if (WorldVars.IsDay) {
+			Actions.push_back(Action("talk to Trent", ElfforTalkToTrent));
+			Actions.push_back(Action("talk to Nina", ElfforTalktoNina));
+		}
+		Actions.push_back(Action("wait until day", ElfforTavernWaitUntilDay, false));
+		Actions.push_back(Action("wait until night", ElfforTavernWaitUntilNight, false));
+		waitDefined = true;
+	} else if (PC.getCurrentLocation() == ELFFORGATE) {
+		Actions.push_back(Action("observe", observeElfforGate));
+		Actions.push_back(Action("read sign", ElfforReadSign));
+		Actions.push_back(Action("leave town", goToRoadToElfforA));
+		Actions.push_back(Action("go to my house", goToElfforMyHouse));
+		Actions.push_back(Action("go to tavern", goToElfforTavern));
+	} else if (PC.getCurrentLocation() == ROADTOELFFORA) {
+		Actions.push_back(Action("observe", observeRoadToElfforA));
+		Actions.push_back(Action("enter Elffor", goToElfforGate));
+		Actions.push_back(Action("go down path", RoadToElfforGoDownPath));
+	} else
+		cout << "Error: Location constructor called while PC was in an invalid location.\n";
+	if (! waitDefined) {
+		Actions.push_back(Action("wait until day", waitUntilDay, false));
+		Actions.push_back(Action("wait until night", waitUntilNight, false));
+	}
+}
 
 void Location::getCommand(string input)
 {
 	if (input == "actions") {
 		if (Menu::getDisplayActions() == false)
 			displayActions();
-	} else if (input == "observe") {
-		display(areaToString(here));
-		cout << '\n';
-		displayDescription();
-	} else if ((input == "wait until day") || (input == "wait until night"))
-		processWait(input);
-	else {
-		if (processCommand(input) == ERROR) {
-			displayUnknownCommand();
+	} else {
+		vector<Action>::iterator it;
+		for (it = Actions.begin(); it != Actions.end(); it++) {
+			if (input == it->command) {
+				it->callAction(PC, WorldVars);
+				return;
+			}
 		}
+		displayUnknownCommand();
 	}
 }
-
-bool Location::IsDay = true;
 
 // Put a space before all displayed actions.
 void Location::displayActions()
 {
 	stringstream output;
-	output << "Your possible actions are:\n observe\n" << getActions() << (IsDay ? " wait until night\n" : " wait until day\n") << " menu\n save\n quit\n";
+	output << "Your possible actions are:\n" << getActions() << (WorldVars.IsDay ? " wait until night\n" : " wait until day\n") << " menu\n save\n quit\n";
 	display(output.str());
+}
+
+void Location::displayDescription()
+{
+	vector<Action>::iterator it;
+	for (it = Actions.begin(); it != Actions.end(); it++) {
+		if (it->command == "observe") {
+			it->callAction(PC, WorldVars);
+			return;
+		}
+	}
+	cout << "Error: " << areaToString(getArea()) << " doesn't have a devined observe function.\n";
+}
+
+string Location::getActions()
+{
+	stringstream output;
+	vector<Action>::iterator it;
+	for (it = Actions.begin(); it != Actions.end(); it++) {
+		if (it->getShowAction())
+			output << ' ' << it->command << '\n';
+	}
+	return output.str();
 }
 
 void Location::displayUnknownCommand()
@@ -37,40 +104,4 @@ void Location::displayUnknownCommand()
 		display("Whatever that is, you can't do it.\n");
 	else
 		display("Whatever that is, you can't do it.  Try using the \"actions\" command.\n");
-}
-
-void Location::processWait(string input)
-{
-	if (input == "wait until day") {
-		if (IsDay == false) {
-			IsDay = true;
-			cout << "You wait until the sun rises.\n";
-		} else
-			cout << "But it already is day...\n";
-	}
-	else if (input == "wait until night") {
-		if (IsDay == true) {
-			IsDay = false;
-			cout << "You wait until the sun sets.\n";
-		} else
-			cout << "But it is already night...\n";
-	}
-	else
-		cout << "Error: processWait() was forced to handle an unknown input.\n";
-}
-
-string Location::saveLocationData()
-{
-	stringstream output;
-	output << IsDay << '\n' << ENDMARKER << '\n';
-	return output.str();
-}
-
-void Location::loadLocationData(string input)
-{
-	stringstream strstr(input);
-	strstr >> IsDay;
-	
-	strstr.ignore(1);
-	LOADDATACHECK("Location")	
 }

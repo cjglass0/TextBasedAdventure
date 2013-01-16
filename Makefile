@@ -1,5 +1,5 @@
-run: Utilities.o Player.o Menu.o Location.o LocationElffor.o \
-LocationRoadToElffor.o Game.o Main.o
+run: Utilities.o Player.o Menu.o WorldVariables.o Action.o Location.o Game.o \
+Main.o
 	g++ -Wall -o $@ $^
 
 push:
@@ -11,11 +11,11 @@ Player.o: Player.h Player.cpp
 
 Menu.o: Menu.h Menu.cpp
 
-Location.o: Location.h Location.cpp
+WorldVariables.o: WorldVariables.h WorldVariables.cpp
 
-LocationElffor.o: LocationElffor.h LocationElffor.cpp
+Action.o: Action.h Action.cpp
 
-LocationRoadToElffor.o: LocationRoadToElffor.h LocationRoadToElffor.cpp
+Location.o: Location.h Menu.h Location.cpp
 
 Game.o: Menu.h Game.h Game.cpp
 

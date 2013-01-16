@@ -39,7 +39,8 @@ void Menu::pauseMenu()
 			default:
 				display("Invalid selection.  Try again.\n");
 		}
-		cout << '\n';
+		if (selection != 0)
+			cout << '\n';
 	} while (selection != 0);
 }
 

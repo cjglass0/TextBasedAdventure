@@ -1,24 +1,6 @@
 #include "Game.h"
 #include "Menu.h"
 
-#define LMCASE(AREA, class) \
-case AREA: return new class(PC);
-
-Location* Game::locationMaker(Area input)
-{
-	switch (input) {
-		LMCASE(ELFFORMYHOUSEINTERIOR, ElfforMyHouseInterior)
-		LMCASE(ELFFORMYHOUSE, ElfforMyHouse)
-		LMCASE(ELFFORTOWNGATE, ElfforTownGate)
-		LMCASE(ELFFORTAVERN, ElfforTavern)
-		LMCASE(ELFFORTAVERNINTERIOR, ElfforTavernInterior)
-		LMCASE(ROADTOELFFORA, RoadToElfforA)
-		default:
-			cout << "Error: locationMaker() was given an invalid location and didn't return anything. It is very likely that the program will crash if you do anything other than quit right now.\n";
-			break;
-	}
-}
-
 Game::Game() : PC(StartingLocation)
 {
 	saveDefaultData();
@@ -78,17 +60,7 @@ void Game::run()
 
 #define SAVEDATABODY(file) \
 	file << "start_save_file\n"; \
-	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData(); \
-	file << Location::saveLocationData() << ElfforRegion::saveRegionData() << RoadToElffor::saveRegionData(); \
-	file << "end_region_data\n" << ENDMARKER << '\n'; \
-\
-	Location *temp; \
-	for (int i = ((int) AREASTARTMARKER) + 1; i < ((int) AREAENDMARKER); i++) { \
-		temp = locationMaker((Area) i); \
-		file << temp->saveData(); \
-		delete temp; \
-	} \
-\
+	file << UtilitiesOptions::saveData() << PC.saveData() << Menu::saveData() << WorldVars.saveData(); \
 	file << "end_of_save_file\n";
 
 void Game::saveData(string filename)
@@ -162,9 +134,6 @@ status Game::saveGame(string &filename)
 	}
 }
 
-#define IFREGIONENDNOTREACHED \
-if (((input.str()).substr(0, 15)) != "end_region_data")
-
 #define GETDATAFORLOAD \
 	input.str(""); \
 	do { \
@@ -190,39 +159,7 @@ if (((input.str()).substr(0, 15)) != "end_region_data")
 	GETDATAFORLOAD \
 	Menu::loadData(input.str()); \
 	GETDATAFORLOAD \
-	Location::loadLocationData(input.str()); \
-	GETDATAFORLOAD \
-	IFREGIONENDNOTREACHED { \
-	ElfforRegion::loadRegionData(input.str()); \
-	GETDATAFORLOAD \
-	} IFREGIONENDNOTREACHED { \
-		RoadToElffor::loadRegionData(input.str()); \
-		GETDATAFORLOAD \
-	} \
-	\
-	int i = ((int) AREASTARTMARKER) + 1; \
-	Location *tempLocation; \
-	\
-	input.str(""); \
-	getline(file, tempString); \
-	input << tempString << '\n'; \
-	while ((tempString != "end_of_save_file") && (i < (int) AREAENDMARKER)) { \
-		while (tempString[0] != ENDMARKER) { \
-			getline(file, tempString); \
-			input << tempString << '\n'; \
-		} \
-		\
-		tempLocation = locationMaker((Area) i); \
-		tempLocation->loadData(input.str()); \
-		delete tempLocation; \
-		\
-		i++; \
-		\
-		input.str(""); \
-		getline(file, tempString); \
-		input << tempString << '\n'; \
-	} \
-	\
+	WorldVars.loadData(input.str()); \
 	return OK;
 	
 status Game::loadGame(string filename)
@@ -241,7 +178,8 @@ void Game::playGame(string filename)
 {	
 	display("Your adventure starts. Keep your wits about you, young adventureer.\n\n");
 	
-	Location *location = locationMaker(PC.getCurrentLocation());
+	Location *location = new Location(PC, WorldVars);
+	lastLocation = location->getArea();
 	string output = areaToString(PC.getCurrentLocation());
 	output += '\n';
 	display(output);
@@ -294,19 +232,19 @@ void Game::playGame(string filename)
 				enterToContinue(); // Each deadly action should have its own output, so there's no need to define one for here.
 				break;
 			}
-			if (location->getArea() != PC.getCurrentLocation()) {
+			if (lastLocation != PC.getCurrentLocation()) {
 				delete location;
-				location = locationMaker(PC.getCurrentLocation());
+				location = new Location(PC, WorldVars);
 				
-				string output = areaToString(PC.getCurrentLocation());
-				output += '\n';
-				display(output);
+				display(areaToString(PC.getCurrentLocation()));
+				cout << '\n';
 				
 				if(Menu::getDisplayDescription())
 					location->displayDescription();
 			}
 		}
 		
+		lastLocation = PC.getCurrentLocation();
 		if (savedOnLastTurn > 0)
 			--savedOnLastTurn;
 	}

@@ -24,10 +24,10 @@ string areaToString(Area input)
 	switch (input) {
 		case ELFFORMYHOUSEINTERIOR: return "Elffor: my house (interior)";
 		case ELFFORMYHOUSE:			return "Elffor: my house";
-		case ELFFORTOWNGATE:		return "Elffor: town gate";
+		case ELFFORGATE:			return "Elffor: gate";
 		case ELFFORTAVERN:			return "Elffor: tavern";
 		case ELFFORTAVERNINTERIOR:	return "Elffor: tavern (interior)";
-		case ROADTOELFFORA:			return "Road to Elffor";
+		case ROADTOELFFORA:			return "Road to Elffor (A)";
 		default:
 			cout << "Error: areaToString() received improper input.\n";
 			return "";
