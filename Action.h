@@ -30,6 +30,8 @@ FUNCACTION(goToRoadToElfforA);
 FUNCACTION(waitUntilDay);
 FUNCACTION(waitUntilNight);
 
+FUNCACTION(observeAction);
+
 FUNCACTION(observeElfforMyHouseInterior);
 FUNCACTION(observeElfforMyHouse);
 FUNCACTION(observeElfforGate);

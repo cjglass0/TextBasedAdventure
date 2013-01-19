@@ -17,10 +17,9 @@ Started on December 5th, 2012.  Many thanks to Mike McG who encouraged me to put
 Notes for developer:
 
 To-do:
--Change the observe function to have all of the current observe functions' bodies in its body, and call the right one based on the PC's location.  Make sure it prints out the areaToString() string for that area.
+-Define an addActions() function for Location.  It should be called when the location is constructed, then called by playGame on every new turn.  It will add relevant actions only, preventing the need for the bools of the Action class to be by reference.  Make the wait functions visible (selectively, depending on IsDay) and remove the code that adds it in displayActions().
 -Make the save and load functions for WorldVariables account for reaching the end of a load file, so you don't need to start over every time you add new variables to the struct.
 -Make a dialog function that displays a line of dialog, given to the function via a string as function input, and then calls enterToContinue().  Call is something short like dialog() to make it convenient to use.  Use it in the dialog inside the Elffor tavern.
 (Maybe)
 -Improve the layout of variables in the Action class.
 -Give Location an assignment operator so Game::playGame() can use a stack variable rather than a heap (new) one.
--Make the constructor for the Action class take a bool& instead of a bool, so an item's visibility can depend on a condition.

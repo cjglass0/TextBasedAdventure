@@ -5,25 +5,22 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 {
 	bool waitDefined = false;
 	
+	Actions.push_back(Action("observe", observeAction));
 	if (PC.getCurrentLocation() == ELFFORMYHOUSEINTERIOR) {
-		Actions.push_back(Action("observe", observeElfforMyHouseInterior));
 		Actions.push_back(Action("leave house", goToElfforMyHouse));
 		Actions.push_back(Action("sleep in bed", ElfforHouseSleepInBed));
 		Actions.push_back(Action("wait until day", ElfforHouseWaitUntilDay, false));
 		Actions.push_back(Action("wait until night", ElfforHouseWaitUntilNight, false));
 		waitDefined = true;
 	} else if (PC.getCurrentLocation() == ELFFORMYHOUSE) {
-		Actions.push_back(Action("observe", observeElfforMyHouse));
 		Actions.push_back(Action("enter house", goToElfforMyHouseInterior));
 		Actions.push_back(Action("go to gate", goToElfforGate));
 		Actions.push_back(Action("go to tavern", goToElfforTavern));
 	} else if (PC.getCurrentLocation() == ELFFORTAVERN) {
-		Actions.push_back(Action("observe", observeElfforTavern));
 		Actions.push_back(Action("enter tavern", ElfforEnterTavern));
 		Actions.push_back(Action("go to my house", goToElfforMyHouse));
 		Actions.push_back(Action("go to gate", goToElfforGate));
 	} else if (PC.getCurrentLocation() == ELFFORTAVERNINTERIOR) {
-		Actions.push_back(Action("observe", observeElfforTavernInterior));
 		Actions.push_back(Action("leave tavern", goToElfforTavern));
 		if (WorldVars.IsDay) {
 			Actions.push_back(Action("talk to Trent", ElfforTalkToTrent));
@@ -33,13 +30,11 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 		Actions.push_back(Action("wait until night", ElfforTavernWaitUntilNight, false));
 		waitDefined = true;
 	} else if (PC.getCurrentLocation() == ELFFORGATE) {
-		Actions.push_back(Action("observe", observeElfforGate));
 		Actions.push_back(Action("read sign", ElfforReadSign));
 		Actions.push_back(Action("leave town", goToRoadToElfforA));
 		Actions.push_back(Action("go to my house", goToElfforMyHouse));
 		Actions.push_back(Action("go to tavern", goToElfforTavern));
 	} else if (PC.getCurrentLocation() == ROADTOELFFORA) {
-		Actions.push_back(Action("observe", observeRoadToElfforA));
 		Actions.push_back(Action("enter Elffor", goToElfforGate));
 		Actions.push_back(Action("go down path", RoadToElfforGoDownPath));
 	} else

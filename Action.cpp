@@ -25,70 +25,57 @@ FUNCACTION(waitUntilNight)
 		cout << "But it is already night...\n";
 }
 
-
-FUNCACTION(observeElfforMyHouseInterior)
-{
-	string output = "The inside of your house.  It's small, but it's home.  ";
-	if (! WorldVars.Elffor.SwordRetrieved)
-		output += "Your sword usually hangs on the wall, but it's missing, dust outlining where it used to be.  ";
-	else
-		output += "Dust outlines the spot on the wall where your sword usually hangs.  ";
-	output += "There's a bed you can sleep in.  ";
-	output += (WorldVars.IsDay ? "It is daytime.\n" : "It is nighttime.\n");
-	display(output);
-}
-
-FUNCACTION(observeElfforMyHouse)
-{
-	string output = "Outside of your house.  It's a quaint little place.  You can see the tavern and the gate that leads out of town.  ";
-	output += (WorldVars.IsDay ? "It is daytime.\n" : "It is nighttime.\n");
-	display(output);
-}
-
-FUNCACTION(observeElfforGate)
-{
-	string output =  "The gate that leads out of the town, left open to allow free passage.  There is a sign posted on the side of the gate.  You can see the tavern and your house.  ";
-	output += (WorldVars.IsDay ? "It is daytime.\n" : "It is nighttime.\n");
-	display(output);
-}
-
-FUNCACTION(observeElfforTavern)
-{
-	string output = "Outside of the local tavern, The Infernal Woods, a small building constructed of dark wood.  It's a modest place, but it's well-kept.\
-  You can see your house and the gate that leads out of town.  ";
-	output += (WorldVars.IsDay ? "It is daytime.\n" : "It is nighttime.\n");
-	display(output);
-}
-
-FUNCACTION(observeElfforTavernInterior)
-{
+FUNCACTION(observeAction) {
 	stringstream output;
-	if (WorldVars.IsDay) {
-		output << "Inside The Infernal Woods.  Trent, the bartender, is ";
-		output << (WorldVars.Elffor.SwordRetrieved ? "standing behind the bar.  " : "waving at you, trying to attract your attention.  ");
-		output << "Nina is sitting at the bar, sipping a brew.  ";
-	} else
-		output << "There's no one inside, as the place is closed.  ";
-	output << (WorldVars.IsDay ? "It is daytime.\n" : "It is nighttime.\n");
-	display(output.str());
-}
-
-FUNCACTION(observeRoadToElfforA)
-{
-	string output = "Outside of the gate to Elffor.  There's a path the leads into some dark woods.  ";
-	if (! WorldVars.RoadToElffor.BattleFought)
-		output += "There's a rustling coming from in the trees.  ";
-	else
-		output += "All is relatively still.  ";
-	if (WorldVars.IsDay)
-		output += "It is daytime.\n";
-	else {
-		if (PC.isInInventory(LANTERN))
-			output += "It is nighttime.\n";
+	bool DayNightAccountedFor = false;
+	
+	display(areaToString(PC.getCurrentLocation()));
+	cout << '\n';
+	
+	if (PC.getCurrentLocation() == ELFFORMYHOUSEINTERIOR) {
+		output << "The inside of your house.  It's small, but it's home.  ";
+		if (! WorldVars.Elffor.SwordRetrieved)
+			output << "Your sword usually hangs on the wall, but it's missing, dust outlining where it used to be.  ";
 		else
-			output += "It is nighttime, and you can see that it's hard to see in the woods.\n";
-	}
-	display(output);
+			output << "Dust outlines the spot on the wall where your sword usually hangs.  ";
+		output << "There's a bed you can sleep in.  ";
+	} else if (PC.getCurrentLocation() == ELFFORMYHOUSE)
+		output << "Outside of your house.  It's a quaint little place.  You can see the tavern and the gate that leads out of town.  ";
+	else if (PC.getCurrentLocation() == ELFFORGATE)
+		output << "The gate that leads out of the town, left open to allow free passage.  There is a sign posted on the side of the gate.  You can see the tavern and your house.  ";
+	else if (PC.getCurrentLocation() == ELFFORTAVERN)
+		output << "Outside of the local tavern, The Infernal Woods, a small building constructed of dark wood.  It's a modest place, but it's well-kept.\
+  You can see your house and the gate that leads out of town.  ";
+	else if (PC.getCurrentLocation() == ELFFORTAVERNINTERIOR) {
+		if (WorldVars.IsDay) {
+			output << "Inside The Infernal Woods.  Trent, the bartender, is ";
+			output << (WorldVars.Elffor.SwordRetrieved ? "standing behind the bar.  " : "waving at you, trying to attract your attention.  ");
+			output << "Nina is sitting at the bar, sipping a brew.  ";
+		} else
+			output << "There's no one inside, as the place is closed.  ";
+	} else if (PC.getCurrentLocation() == ROADTOELFFORA) {
+		output << "Outside of the gate to Elffor.  ";
+		if (! WorldVars.RoadToElffor.BattleFought)
+			output << "There's a rustling coming from in the trees.  ";
+		else
+			output << "All is relatively still.  ";
+		if (WorldVars.IsDay)
+			output << "It is daytime.";
+		else {
+			if (PC.isInInventory(LANTERN))
+				output << "It is nighttime.";
+			else
+				output << "It is nighttime, and you can see that it's hard to see in the woods.";
+		}
+		DayNightAccountedFor = true;
+	} else
+		cout << "Error:  the observe action was called on an area it didn't know how to handle.";
+	
+	if (! DayNightAccountedFor)
+		output << (WorldVars.IsDay ? "It is daytime." : "It is nighttime.");
+	
+	output << '\n';
+	display(output.str());
 }
 
 FUNCACTION(ElfforHouseSleepInBed)
@@ -130,7 +117,7 @@ FUNCACTION(ElfforEnterTavern)
 	if (WorldVars.IsDay)
 		PC.setCurrentLocation(ELFFORTAVERNINTERIOR);
 	else
-		display("The tavern door is locked.\n");
+		display("The tavern door is locked and won't budge.\n");
 }
 
 FUNCACTION(ElfforTalkToTrent)

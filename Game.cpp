@@ -180,9 +180,11 @@ void Game::playGame(string filename)
 	
 	Location *location = new Location(PC, WorldVars);
 	lastLocation = location->getArea();
-	string output = areaToString(PC.getCurrentLocation());
-	output += '\n';
-	display(output);
+	
+	if(! Menu::getDisplayDescription()) {
+		display(areaToString(PC.getCurrentLocation()));
+		cout << '\n';
+	}
 	
 	string input;
 	int savedOnLastTurn = 1;
@@ -236,11 +238,12 @@ void Game::playGame(string filename)
 				delete location;
 				location = new Location(PC, WorldVars);
 				
-				display(areaToString(PC.getCurrentLocation()));
-				cout << '\n';
-				
 				if(Menu::getDisplayDescription())
 					location->displayDescription();
+				else {
+					display(areaToString(PC.getCurrentLocation()));
+					cout << '\n';
+				}
 			}
 		}
 		
