@@ -4,12 +4,10 @@
 /*	To add a new location:
  *		-add it's name to the Area enum in Globals.h (be sure to add it right before the AREAENDMARKER one, after all the previous areas)
  *		-add it to the definision of areaToString() to string in Utilities.cpp
- *		-other stuff (as of yet undetermined)
- *
- *	To add a new region:
- *		-add a prototype to the proper LocationXXXXX.h file
- *		-define its saveRegionData() and loadRegionData() functions in the proper LocationXXXXX.cpp file
- *		-add calls to the those save and load functions in the SAVEDATABODY and LOADDATABODY macros in Game.cpp
+ *		-add any static variables it needs to the WorldVariables struct in WorldVariables.h
+ *		-add those static variables to every function in WorldVariables.cpp
+ *		-add its description to the observeAction() body in Action.cpp, as well as a goTo function and whatever functions the area needs in Action.h/.cpp
+ *		-add the Action to go to this area to the adjacent areas in the body of Location().  Add its own functions to the body of Location().
  */
 
 #include "Globals.h"
@@ -29,6 +27,7 @@ public:
 	Location(Player &PCin, WorldVariables &WorldVarsIn);
 
 	Area getArea(){return PC.getCurrentLocation();} // Delete this and replace all calls to it with more appropriate functions.
+	void refreshActions(); // Adds all applicable actions to the Actions vector, based on WorldVars and PC.
 	void displayActions(); // Displays all possible actions, including those that aren't area specific.
 	void getCommand(string input); // Takes input and processCommand function to process it. Returns the area the player ends up in after the command is processed.
 	void displayDescription(); // Displays the area specific description.

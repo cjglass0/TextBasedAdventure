@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Menu.h"
 
-Game::Game() : PC(StartingLocation)
+Game::Game() : PC(StartingLocation), LocationVar(PC, WorldVars)
 {
 	saveDefaultData();
 }
@@ -178,24 +178,24 @@ void Game::playGame(string filename)
 {	
 	display("Your adventure starts. Keep your wits about you, young adventureer.\n\n");
 	
-	Location *location = new Location(PC, WorldVars);
-	lastLocation = location->getArea();
-	
-	if(! Menu::getDisplayDescription()) {
-		display(areaToString(PC.getCurrentLocation()));
-		cout << '\n';
-	}
-	
+	lastLocation = AREASTARTMARKER; // Set equal to a dummy value of the num so an area's name/description is always displayed at the start of a new game.
 	string input;
 	int savedOnLastTurn = 1;
 	
-	if(Menu::getDisplayDescription())
-		location->displayDescription();
-	
 	while (true) {
+		if (lastLocation != PC.getCurrentLocation()) {
+			if(Menu::getDisplayDescription())
+				LocationVar.displayDescription();
+			else {
+				display(areaToString(PC.getCurrentLocation()));
+				cout << '\n';
+			}
+		}
+		lastLocation = PC.getCurrentLocation();
+
 		if (Menu::getDisplayActions()) {
 			cout << '\n';
-			location->displayActions();
+			LocationVar.displayActions();
 		}
 		
 		cout << "\nWhat will you do?\n";
@@ -229,25 +229,13 @@ void Game::playGame(string filename)
 			if (saveGame(filename) == OK)
 				savedOnLastTurn = 2;
 		} else {
-			location->getCommand(input);
+			LocationVar.getCommand(input);
 			if ((PC.isDead()) || (PC.getCurrentLocation() == TERMINATE)) {
 				enterToContinue(); // Each deadly action should have its own output, so there's no need to define one for here.
 				break;
 			}
-			if (lastLocation != PC.getCurrentLocation()) {
-				delete location;
-				location = new Location(PC, WorldVars);
-				
-				if(Menu::getDisplayDescription())
-					location->displayDescription();
-				else {
-					display(areaToString(PC.getCurrentLocation()));
-					cout << '\n';
-				}
-			}
 		}
 		
-		lastLocation = PC.getCurrentLocation();
 		if (savedOnLastTurn > 0)
 			--savedOnLastTurn;
 	}

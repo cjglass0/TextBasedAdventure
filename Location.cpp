@@ -3,14 +3,21 @@
 
 Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldVars(WorldVarsIn)
 {
-	bool waitDefined = false;
+	refreshActions();
+}
+
+void Location::refreshActions()
+{
+	bool waitDefined = false; // Set this variable to true if an area gets its own explicitly defined wait until day/night commands.
+	
+	Actions.clear();
 	
 	Actions.push_back(Action("observe", observeAction));
 	if (PC.getCurrentLocation() == ELFFORMYHOUSEINTERIOR) {
 		Actions.push_back(Action("leave house", goToElfforMyHouse));
 		Actions.push_back(Action("sleep in bed", ElfforHouseSleepInBed));
-		Actions.push_back(Action("wait until day", ElfforHouseWaitUntilDay, false));
-		Actions.push_back(Action("wait until night", ElfforHouseWaitUntilNight, false));
+		Actions.push_back(Action("wait until day", ElfforHouseWaitUntilDay, ! WorldVars.IsDay));
+		Actions.push_back(Action("wait until night", ElfforHouseWaitUntilNight, WorldVars.IsDay));
 		waitDefined = true;
 	} else if (PC.getCurrentLocation() == ELFFORMYHOUSE) {
 		Actions.push_back(Action("enter house", goToElfforMyHouseInterior));
@@ -40,8 +47,8 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 	} else
 		cout << "Error: Location constructor called while PC was in an invalid location.\n";
 	if (! waitDefined) {
-		Actions.push_back(Action("wait until day", waitUntilDay, false));
-		Actions.push_back(Action("wait until night", waitUntilNight, false));
+		Actions.push_back(Action("wait until day", waitUntilDay, ! WorldVars.IsDay));
+		Actions.push_back(Action("wait until night", waitUntilNight, WorldVars.IsDay));
 	}
 }
 
@@ -55,6 +62,7 @@ void Location::getCommand(string input)
 		for (it = Actions.begin(); it != Actions.end(); it++) {
 			if (input == it->command) {
 				it->callAction(PC, WorldVars);
+				refreshActions();
 				return;
 			}
 		}
@@ -66,7 +74,7 @@ void Location::getCommand(string input)
 void Location::displayActions()
 {
 	stringstream output;
-	output << "Your possible actions are:\n" << getActions() << (WorldVars.IsDay ? " wait until night\n" : " wait until day\n") << " menu\n save\n quit\n";
+	output << "Your possible actions are:\n" << getActions() << " menu\n save\n quit\n";
 	display(output.str());
 }
 

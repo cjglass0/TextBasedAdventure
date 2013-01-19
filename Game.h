@@ -9,6 +9,8 @@ class Game {
 private:
 	Player PC;
 	WorldVariables WorldVars;
+	Location LocationVar;
+	
 	string defaultData;
 	Area lastLocation;
 	

@@ -7,6 +7,10 @@ FUNCACTION(goToElfforTavernInterior){PC.setCurrentLocation(ELFFORTAVERNINTERIOR)
 FUNCACTION(goToElfforGate){PC.setCurrentLocation(ELFFORGATE);}
 FUNCACTION(goToRoadToElfforA){PC.setCurrentLocation(ROADTOELFFORA);}
 
+/*
+ *		Base Actions
+ */
+
 FUNCACTION(waitUntilDay)
 {
 	if (WorldVars.IsDay == false) {
@@ -77,6 +81,10 @@ FUNCACTION(observeAction) {
 	output << '\n';
 	display(output.str());
 }
+
+/*
+ *		Elffor Actions
+ */
 
 FUNCACTION(ElfforHouseSleepInBed)
 {
@@ -180,6 +188,10 @@ FUNCACTION(ElfforTavernWaitUntilNight)
 	} else
 		display("But it is already night...\n");
 }
+
+/*
+ *		Road to Elffor Actions
+ */
 
 FUNCACTION(EnterElffor)
 {
