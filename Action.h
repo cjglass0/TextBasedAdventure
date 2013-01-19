@@ -8,7 +8,7 @@
 
 class Action {
 public:
-	// These variables have been set up like this so I can get the code to compile.  The class's setup will be improved later.
+	// These variables have been set up like this so I can get the code to compile.  The class's setup might be improved later.
 	string command; // This should be constant
 	bool showAction; // This and the one below should be private.
 	void (*funcPtr)(Player&, WorldVariables&, bool&);

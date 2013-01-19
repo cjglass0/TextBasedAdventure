@@ -44,4 +44,7 @@ int stringComp(string leftComp, string rightComp);
 // Returns the number of digits of the input number.  Returns 1 if input == 0.
 uint digits(uint input);
 
+// Returns false if the input is '0', true otherwise (in the nature of false only being associated with zero). 
+bool charToBool(char input);
+
 #endif

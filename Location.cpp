@@ -6,6 +6,11 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 	refreshActions();
 }
 
+#define ADDWAITDAYNIGHT(dayFunctionPointer, nightFunctionPointer) \
+	Actions.push_back(Action("wait until day", dayFunctionPointer, ! WorldVars.IsDay)); \
+	Actions.push_back(Action("wait until night", nightFunctionPointer, WorldVars.IsDay)); \
+	waitDefined = true;
+
 void Location::refreshActions()
 {
 	bool waitDefined = false; // Set this variable to true if an area gets its own explicitly defined wait until day/night commands.
@@ -16,9 +21,7 @@ void Location::refreshActions()
 	if (PC.getCurrentLocation() == ELFFORMYHOUSEINTERIOR) {
 		Actions.push_back(Action("leave house", goToElfforMyHouse));
 		Actions.push_back(Action("sleep in bed", ElfforHouseSleepInBed));
-		Actions.push_back(Action("wait until day", ElfforHouseWaitUntilDay, ! WorldVars.IsDay));
-		Actions.push_back(Action("wait until night", ElfforHouseWaitUntilNight, WorldVars.IsDay));
-		waitDefined = true;
+		ADDWAITDAYNIGHT(ElfforHouseWaitUntilDay, ElfforHouseWaitUntilNight);
 	} else if (PC.getCurrentLocation() == ELFFORMYHOUSE) {
 		Actions.push_back(Action("enter house", goToElfforMyHouseInterior));
 		Actions.push_back(Action("go to gate", goToElfforGate));
@@ -33,9 +36,7 @@ void Location::refreshActions()
 			Actions.push_back(Action("talk to Trent", ElfforTalkToTrent));
 			Actions.push_back(Action("talk to Nina", ElfforTalktoNina));
 		}
-		Actions.push_back(Action("wait until day", ElfforTavernWaitUntilDay, false));
-		Actions.push_back(Action("wait until night", ElfforTavernWaitUntilNight, false));
-		waitDefined = true;
+		ADDWAITDAYNIGHT(ElfforTavernWaitUntilDay, ElfforTavernWaitUntilNight)
 	} else if (PC.getCurrentLocation() == ELFFORGATE) {
 		Actions.push_back(Action("read sign", ElfforReadSign));
 		Actions.push_back(Action("leave town", goToRoadToElfforA));

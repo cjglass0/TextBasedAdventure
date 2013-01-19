@@ -67,6 +67,7 @@ void Game::saveData(string filename)
 {
 	ofstream file(filename.c_str());
 	SAVEDATABODY(file)
+	file.close();
 }
 
 void Game::saveDefaultData()
@@ -160,12 +161,16 @@ status Game::saveGame(string &filename)
 	Menu::loadData(input.str()); \
 	GETDATAFORLOAD \
 	WorldVars.loadData(input.str()); \
+	getline(file, tempString); \
+	if (tempString != "end_of_save_file") \
+		cout << "Error:  a load function didn't reach the end of the savefile.\n"; \
 	return OK;
 	
 status Game::loadGame(string filename)
 {
 	ifstream file(filename.c_str());
 	LOADDATABODY(file, "loadGame")
+	file.close();
 }
 
 status Game::loadDefaultData()

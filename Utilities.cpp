@@ -137,3 +137,8 @@ uint digits(uint input)
 	else
 		return ((uint) log10(input)) + 1;
 }
+
+bool charToBool(char input)
+{
+	return (input != '0');
+}
