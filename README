@@ -13,5 +13,3 @@ Game.h/.cpp
 Main.cpp
 
 Started on December 5th, 2012.  Many thanks to Mike McG who encouraged me to put this project on GitHub and who encouraged me to not settle for "good enough" when there was room for improvement.  Thanks to Daniel Scanlan, who figured out the cause of a bug that would have killed this project early on had he not caught it.
-
-Notes for developer:
