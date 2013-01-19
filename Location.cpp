@@ -64,6 +64,7 @@ void Location::getCommand(string input)
 			if (input == it->command) {
 				it->callAction(PC, WorldVars);
 				refreshActions();
+				DialogStruct::DialogEngaged = false;
 				return;
 			}
 		}

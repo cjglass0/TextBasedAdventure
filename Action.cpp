@@ -115,9 +115,8 @@ FUNCACTION(ElfforHouseWaitUntilNight)
 
 FUNCACTION(ElfforReadSign)
 {
-	display("WARNING:\nWild wolves have been spotted roaming outside of the town fence.  They will attack unprotected travelers.\
-  If you are travelling alone, bring something to defend yourself with.\n");
-	enterToContinue();
+	dialog("WARNING:\nWild wolves have been spotted roaming outside of the town fence.  They will attack unprotected travelers.\
+  If you are travelling alone, bring something to defend yourself with.");
 }
 
 FUNCACTION(ElfforEnterTavern)
@@ -131,47 +130,39 @@ FUNCACTION(ElfforEnterTavern)
 FUNCACTION(ElfforTalkToTrent)
 {
 	if (WorldVars.Elffor.SwordRetrieved) {
-		display("\"Is life treating you well, friend?  I certainly hope it is.\"\n");
+		dialog("\"Is life treating you well, friend?  I certainly hope it is.\"");
 	} else {
-		display("\"I'm glad you popped in!  You left something here last night.\"\n\nTrent hands you your sword.\n");
+		dialog("\"I'm glad you popped in!  You left something here last night.\"");
 		PC.addToInventory(RUSTYSWORD);
 		WorldVars.Elffor.SwordRetrieved = true;
-		enterToContinue();
-		display("\n\"You going somewhere?  You'll be needing that, then.  I hear we've got wolves in our midst.\"\n");
-		enterToContinue();
-		display("\n\"Bah!  Wolves, you say?\" Nina shouts from her stool.  \"We haven't had a wolf problem in years, not since I showed them what's what!  The lad'll be fine!\"\n");
-		enterToContinue();
-		display("\n\"You need to get out of the tavern more, Nina.  These aren't the times they used to be.\"\n");
-		enterToContinue();
-		display("\nTrent turns to face you.  \"Either way, good to have your sword back, eh, friend?\"\n");
-		enterToContinue();
+		dialog("Trent hands you your sword.");
+		dialog("\"You going somewhere?  You'll be needing that, then.  I hear we've got wolves in our midst.\"");
+		dialog("\"Bah!  Wolves, you say?\" Nina shouts from her stool.  \"We haven't had a wolf problem in years, not since I showed them what's what!  The lad'll be fine!\"");
+		dialog("\"You need to get out of the tavern more, Nina.  These aren't the times they used to be.\"");
+		dialog("Trent turns to face you.  \"Either way, good to have your sword back, eh, friend?\"");
 	}
 }
 
 FUNCACTION(ElfforTalktoNina)
 {
 	if (! WorldVars.Elffor.SwordRetrieved)
-		display("\"How ye be these days, lad?\"\n");
+		dialog("\"How ye be these days, lad?\"");
 	else {
 		if (! WorldVars.Elffor.NinaConversationHad) {
-			display("\"Trent's just a worry-wort.  You were quite the fighter in your day, if I recall correctly.\"\n");
-			enterToContinue();
-			display("\n\"Your recall isn't what it used to be, Nina.\"\n");
-			enterToContinue();
-			display("\n\"Are you doubting our boy's abilities, Trent?!\"\n");
-			enterToContinue();
-			display("\n\"I'm just saying you could do with a bit less of the ale, that's all...\"\n");
-			enterToContinue();
+			dialog("\"Trent's just a worry-wort.  You were quite the fighter in your day, if I recall correctly.\"");
+			dialog("\"Your recall isn't what it used to be, Nina.\"");
+			dialog("\"Are you doubting our boy's abilities, Trent?!\"");
+			dialog("\"I'm just saying you could do with a bit less of the ale, that's all...\"");
 			WorldVars.Elffor.NinaConversationHad = true;
 		} else
-			display("\"Why, I'm sure you could take down a wolf with your bare hands, lad!\"\n");
+			dialog("\"Why, I'm sure you could take down a wolf with your bare hands, lad!\"");
 	}
 }
 
 FUNCACTION(ElfforTavernWaitUntilDay)
 {
 	if (WorldVars.IsDay == false) {
-		display("Trent walks in and gasps when he sees you.  \"How did you get in here?!...  Well, whatever, you're harmless enough.  Just don't scare me like that again.\"\n");
+		dialog("Trent walks in and gasps when he sees you.  \"How did you get in here?!...  Well, whatever, you're harmless enough.  Just don't scare me like that again.\"");
 		WorldVars.IsDay = true;
 	} else
 		display("But it already is day...\n");
@@ -180,8 +171,7 @@ FUNCACTION(ElfforTavernWaitUntilDay)
 FUNCACTION(ElfforTavernWaitUntilNight)
 {
 	if (WorldVars.IsDay == true) {
-		display("You stay until closing, at which point Trent leads you to the door.  \"Sorry, friend, but you can't stay here for the night.\"\n");
-		enterToContinue();
+		dialog("You stay until closing, at which point Trent leads you to the door.  \"Sorry, friend, but you can't stay here for the night.\"");
 		cout << '\n';
 		PC.setCurrentLocation(ELFFORTAVERN);
 		WorldVars.IsDay = false;

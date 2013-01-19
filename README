@@ -17,8 +17,5 @@ Started on December 5th, 2012.  Many thanks to Mike McG who encouraged me to put
 Notes for developer:
 
 To-do:
--Make a dialog function that displays a line of dialog, given to the function via a string as function input, and then calls enterToContinue().  Call is something short like dialog() to make it convenient to use.  Use it in the dialog inside the Elffor tavern.
 (Maybe)
--Make the WorldVars variable an element of Location, now that Location can be used without the need to delete it and make a new one.
 -Improve the layout of variables in the Action class.
--Give Location an assignment operator so Game::playGame() can use a stack variable rather than a heap (new) one.

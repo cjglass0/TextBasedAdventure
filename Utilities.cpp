@@ -3,6 +3,7 @@
 unsigned int UtilitiesOptions::screenWidth = 80;
 unsigned int UtilitiesOptions::screenHeight = 24;
 bool UtilitiesOptions::displayItemDescriptions = false;
+bool DialogStruct::DialogEngaged = false;
 
 string UtilitiesOptions::saveData()
 {
@@ -62,6 +63,18 @@ void display(string input, unsigned int width)
 		}
 	}
 	cout << remainingOutput; // Prints out what's left once the string that remains to be printed is shorter than the width of the screen.
+}
+
+void dialog(string input)
+{
+	if (DialogStruct::DialogEngaged)
+		cout << '\n';
+	else
+		DialogStruct::DialogEngaged = true;
+	
+	display(input);
+	cout << '\n';
+	enterToContinue();
 }
 
 string truncateText(string name, int length, uint quantity)
