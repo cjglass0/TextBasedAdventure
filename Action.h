@@ -7,13 +7,13 @@
 #include "WorldVariables.h"
 
 class Action {
-public:
-	// These variables have been set up like this so I can get the code to compile.  The class's setup might be improved later.
-	string command; // This should be constant
-	bool showAction; // This and the one below should be private.
+private:
+	string command;
+	bool showAction;
 	void (*funcPtr)(Player&, WorldVariables&, bool&);
-	
+public:
 	Action(string commandIn, void (*funcPtrIn)(Player&, WorldVariables&, bool&), bool showActionIn = true) : command(commandIn), showAction(showActionIn), funcPtr(funcPtrIn) {}
+	string getCommand(){return command;}
 	bool getShowAction(){return showAction;}
 	void callAction(Player &PC, WorldVariables &WorldVars){(*funcPtr)(PC, WorldVars, showAction);}
 };

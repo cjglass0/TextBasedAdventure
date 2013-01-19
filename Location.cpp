@@ -61,7 +61,7 @@ void Location::getCommand(string input)
 	} else {
 		vector<Action>::iterator it;
 		for (it = Actions.begin(); it != Actions.end(); it++) {
-			if (input == it->command) {
+			if (input == it->getCommand()) {
 				it->callAction(PC, WorldVars);
 				refreshActions();
 				DialogStruct::DialogEngaged = false;
@@ -84,7 +84,7 @@ void Location::displayDescription()
 {
 	vector<Action>::iterator it;
 	for (it = Actions.begin(); it != Actions.end(); it++) {
-		if (it->command == "observe") {
+		if (it->getCommand() == "observe") {
 			it->callAction(PC, WorldVars);
 			return;
 		}
@@ -98,7 +98,7 @@ string Location::getActions()
 	vector<Action>::iterator it;
 	for (it = Actions.begin(); it != Actions.end(); it++) {
 		if (it->getShowAction())
-			output << ' ' << it->command << '\n';
+			output << ' ' << it->getCommand() << '\n';
 	}
 	return output.str();
 }
