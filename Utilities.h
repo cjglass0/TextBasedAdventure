@@ -2,6 +2,7 @@
 #define UTILITIES_H
 
 #include "Globals.h"
+#include <algorithm>
 
 // Defines functions useful to all parts of the program.
 

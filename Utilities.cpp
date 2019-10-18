@@ -127,7 +127,7 @@ int stringComp(string leftComp, string rightComp)
 	for (i = 0; i < rightComp.length(); i++)
 		rightComp[i] = tolower(rightComp[i]);
 	
-	int compLength = min(leftComp.length(), rightComp.length());
+	int compLength = std::min(leftComp.length(), rightComp.length());
 	for (i = 0; i < compLength; i++) {
 		if (leftComp[i] < rightComp[i])
 			return 1;
