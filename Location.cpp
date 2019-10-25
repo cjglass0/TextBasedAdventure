@@ -11,6 +11,13 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 	Actions.push_back(Action("wait until night", nightFunctionPointer, WorldVars.IsDay)); \
 	waitDefined = true;
 
+//RE: Case insensitive research
+//	Available actions are different depending on each location
+//	They are tailor-made
+//	It seems like they are all hard-coded to be lower case
+//	Always hard-coding each action as lower case can work for ensuring that the actions are lower case,
+//		but it might be error-prone
+//	It would be best if the Action constructor converted a string to lower case, just to be sure
 void Location::refreshActions()
 {
 	bool waitDefined = false; // Set this variable to true if an area gets its own explicitly defined wait until day/night commands.

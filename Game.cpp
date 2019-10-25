@@ -207,6 +207,38 @@ void Game::playGame(string filename)
 		getline(cin, input);
 		cout << '\n';
 		
+		//RE: Case-insensitive research
+		//	This section is important
+		//	input -> this variable can be sanitized to lower case before any reads are done to it
+		//	THEN, any evaluations of its content need to be done expecting the data to be lower case
+		//	Where do these evaluations take place?
+		//		See: LocationVar.getCommand(input)
+		//	--- UPDATE ---
+		//	Action header updated to automatically transform the game's command registry to only contain lower case actions
+		//	Only thing left is to convert the input to lower case, which is trivial
+		//	The implementation's expected behaviour has been validated
+		//	Test Case 1: Registered command "observe"
+		//		User Input "observe"
+		//			Expected Result: Success, as defined by [Location's observation text displayed, indicating the correct function being chosen]
+		//			Observed Result:  Success
+		//		User Input "OBSERVE"
+		//			Expected Result: Success, see above
+		//			Observed Result:  Success
+		//		User Input "oBsErVe"
+		//			Expected Result: Success, see above
+		//			Observed Result:  Success
+		//	Test Case 2: Registered command "OBSERVE"
+		//		User Input "observe"
+		//			Expected Result: Success, as defined by [Location's observation text displayed, indicating the correct function being chosen]
+		//			Observed Result:  Success
+		//		User Input "OBSERVE"
+		//			Expected Result: Success, see above
+		//			Observed Result:  Success
+		//		User Input "oBsErVe"
+		//			Expected Result: Success, see above
+		//			Observed Result:  Success
+		std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
 		if (input == "quit" || input == "0") {
 			bool quitIt = false;
 			
