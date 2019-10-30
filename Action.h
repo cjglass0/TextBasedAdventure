@@ -12,7 +12,12 @@ private:
 	bool showAction;
 	void (*funcPtr)(Player&, WorldVariables&, bool&);
 public:
-	Action(string commandIn, void (*funcPtrIn)(Player&, WorldVariables&, bool&), bool showActionIn = true) : command(commandIn), showAction(showActionIn), funcPtr(funcPtrIn) {}
+	//RE: Case insensitive research
+	//	Action constructor modified to automatically convert the command string to lower case
+	//	So, when a programmer is hard coding actions, the programmer can mix and match case and the game will only see lower case
+	Action(string commandIn, void (*funcPtrIn)(Player&, WorldVariables&, bool&), bool showActionIn = true) : command(commandIn), showAction(showActionIn), funcPtr(funcPtrIn) {
+		std::transform(command.begin(), command.end(), command.begin(), ::tolower);
+	}
 	string getCommand(){return command;}
 	bool getShowAction(){return showAction;}
 	void callAction(Player &PC, WorldVariables &WorldVars){(*funcPtr)(PC, WorldVars, showAction);}
