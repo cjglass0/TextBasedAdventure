@@ -6,6 +6,60 @@ Game::Game() : PC(StartingLocation), LocationVar(PC, WorldVars)
 	saveDefaultData();
 }
 
+void Game::initializeAllLocations() {
+	//Create a separate Location for every place in the game that has one
+	//	Including their predefined actions
+	//Add all of these to the allAreas vector
+	//enum Area {TERMINATE = -1, AREASTARTMARKER, ELFFORMYHOUSEINTERIOR, ELFFORMYHOUSE, ELFFORGATE, ELFFORTAVERN, ELFFORTAVERNINTERIOR, ROADTOELFFORA, AREAENDMARKER};
+
+	Location* location_ELFFORMYHOUSEINTERIOR = new Location(PC, WorldVars);
+	location_ELFFORMYHOUSEINTERIOR->setLocationValue(ELFFORMYHOUSEINTERIOR);
+	location_ELFFORMYHOUSEINTERIOR->addConnectedLocation(ELFFORMYHOUSE);
+	location_ELFFORMYHOUSEINTERIOR->setActions();
+	addToAreas(location_ELFFORMYHOUSEINTERIOR);
+
+	Location* location_ELFFORMYHOUSE = new Location(PC, WorldVars);
+	location_ELFFORMYHOUSE->setLocationValue(ELFFORMYHOUSE);
+	location_ELFFORMYHOUSE->addConnectedLocation(ELFFORMYHOUSEINTERIOR);
+	location_ELFFORMYHOUSE->addConnectedLocation(ELFFORGATE);
+	location_ELFFORMYHOUSE->addConnectedLocation(ELFFORTAVERN);
+	location_ELFFORMYHOUSE->setActions();
+	addToAreas(location_ELFFORMYHOUSE);
+
+	Location* location_ELFFORTAVERN = new Location(PC, WorldVars);
+	location_ELFFORTAVERN->setLocationValue(ELFFORTAVERN);
+	location_ELFFORTAVERN->addConnectedLocation(ELFFORMYHOUSE);
+	location_ELFFORTAVERN->addConnectedLocation(ELFFORTAVERNINTERIOR);
+	location_ELFFORTAVERN->setActions();
+	addToAreas(location_ELFFORTAVERN);
+
+	Location* location_ELFFORTAVERNINTERIOR = new Location(PC, WorldVars);
+	location_ELFFORTAVERNINTERIOR->setLocationValue(ELFFORTAVERNINTERIOR);
+	location_ELFFORTAVERNINTERIOR->addConnectedLocation(ELFFORTAVERN);
+	location_ELFFORTAVERNINTERIOR->setActions();
+	addToAreas(location_ELFFORTAVERNINTERIOR);
+
+	Location* location_ELFFORGATE = new Location(PC, WorldVars);
+	location_ELFFORGATE->setLocationValue(ELFFORGATE);
+	location_ELFFORGATE->addConnectedLocation(ELFFORMYHOUSE);
+	location_ELFFORGATE->addConnectedLocation(ELFFORTAVERN);
+	location_ELFFORGATE->addConnectedLocation(ROADTOELFFORA);
+	location_ELFFORGATE->setActions();
+	addToAreas(location_ELFFORGATE);
+
+	Location* location_ROADTOELFFORA = new Location(PC, WorldVars);
+	location_ROADTOELFFORA->setLocationValue(ROADTOELFFORA);
+	location_ROADTOELFFORA->addConnectedLocation(ELFFORGATE);
+	location_ROADTOELFFORA->addConnectedLocation(ELFFORTAVERN);
+	location_ROADTOELFFORA->addConnectedLocation(ROADTOELFFORA);
+	location_ROADTOELFFORA->setActions();
+	addToAreas(location_ROADTOELFFORA);
+}
+
+void Game::addToAreas(Location* loc) {
+	allAreas.insert(std::pair<Area, Location*>(loc->getLocationValue(), loc));
+}
+
 void Game::run()
 {
 	int selection;
@@ -265,7 +319,13 @@ void Game::playGame(string filename)
 		} else if (input == "save") {
 			if (saveGame(filename) == OK)
 				savedOnLastTurn = 2;
-		} else {
+		}
+		else if (input == "map") {
+			//display map
+			display("You look at your map.\n");
+
+		}
+		else {
 			LocationVar.getCommand(input);
 			if ((PC.isDead()) || (PC.getCurrentLocation() == TERMINATE)) {
 				enterToContinue(); // Each deadly action should have its own output, so there's no need to define one for here.
