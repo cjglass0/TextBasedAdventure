@@ -22,6 +22,7 @@ private:
 	void saveData(string filename);
 	status loadGame(string filename);
 	void playGame(string filename = "");
+	void displayMap();
 public:
 	Game();
 	void initializeAllLocations();

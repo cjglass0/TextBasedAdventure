@@ -54,6 +54,8 @@ void Game::initializeAllLocations() {
 	location_ROADTOELFFORA->addConnectedLocation(ROADTOELFFORA);
 	location_ROADTOELFFORA->setActions();
 	addToAreas(location_ROADTOELFFORA);
+
+	std::cout << "AllAreas size: " << allAreas.size() << std::endl;
 }
 
 void Game::addToAreas(Location* loc) {
@@ -323,7 +325,7 @@ void Game::playGame(string filename)
 		else if (input == "map") {
 			//display map
 			display("You look at your map.\n");
-
+			displayMap();
 		}
 		else {
 			LocationVar.getCommand(input);
@@ -335,5 +337,20 @@ void Game::playGame(string filename)
 		
 		if (savedOnLastTurn > 0)
 			--savedOnLastTurn;
+	}
+}
+
+void Game::displayMap() {
+	display("MAP OF ELFFOR\n");
+	for (auto const &pair : allAreas) {
+		auto const &value = allAreas.at(pair.first);
+		switch(value->getLocationValue()) {
+		case ELFFORMYHOUSEINTERIOR:
+		case ELFFORTAVERNINTERIOR:
+			break;
+		default:
+			display(areaToString(value->getLocationValue()));
+			display("\n");
+		}
 	}
 }
