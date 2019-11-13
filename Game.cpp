@@ -350,6 +350,9 @@ void Game::displayMap() {
 			break;
 		default:
 			display(areaToString(value->getLocationValue()));
+			if (PC.getCurrentLocation() == value->getLocationValue()) {
+				display(" <-- You are here");
+			}
 			display("\n");
 		}
 	}
