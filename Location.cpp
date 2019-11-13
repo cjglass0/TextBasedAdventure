@@ -6,6 +6,10 @@ Location::Location(Player &PCin, WorldVariables &WorldVarsIn) : PC(PCin), WorldV
 	refreshActions();
 }
 
+void Location::setActions() {
+	refreshActions();
+}
+
 #define ADDWAITDAYNIGHT(dayFunctionPointer, nightFunctionPointer) \
 	Actions.push_back(Action("wait until day", dayFunctionPointer, ! WorldVars.IsDay)); \
 	Actions.push_back(Action("wait until night", nightFunctionPointer, WorldVars.IsDay)); \
@@ -83,7 +87,7 @@ void Location::getCommand(string input)
 void Location::displayActions()
 {
 	stringstream output;
-	output << "Your possible actions are:\n" << getActions() << " menu\n save\n quit\n";
+	output << "Your possible actions are:\n" << getActions() << " menu\n save\n map\n quit\n";
 	display(output.str());
 }
 

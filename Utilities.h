@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include <algorithm>
+#include <vector>
 
 // Defines functions useful to all parts of the program.
 

@@ -21,16 +21,38 @@ private:
 	WorldVariables &WorldVars;
 	Player &PC;
 	vector<Action> Actions;
+	//This field is very important for compatibility
+	//the game stores every possible location as an enum, this will uniquely identify the location
+	Area locationValue;
+	std::vector<Area> connectedLocations;
 	
 	string getActions(); // Returns all possible actions in the Actions vector. Each listed action should start with a space and end with a newline character.
 public:
 	Location(Player &PCin, WorldVariables &WorldVarsIn);
+
+	void setActions();
 
 	Area getArea(){return PC.getCurrentLocation();} // Delete this and replace all calls to it with more appropriate functions.
 	void refreshActions(); // Adds all applicable actions to the Actions vector, based on WorldVars and PC.
 	void displayActions(); // Displays all possible actions, including those that aren't area specific.
 	void getCommand(string input); // Takes input and processCommand function to process it. Returns the area the player ends up in after the command is processed.
 	void displayDescription(); // Displays the area specific description.
+
+	void setLocationValue(Area value) { locationValue = value; }
+	Area getLocationValue() { return locationValue; }
+
+	void addConnectedLocation(Area value){ 
+		if (!(std::find(connectedLocations.begin(), connectedLocations.end(), value) != connectedLocations.end())) {
+			connectedLocations.push_back(value);
+		}
+	}
+	void removeConnectedLocation(Area value) {
+		auto it = std::find(connectedLocations.begin(), connectedLocations.end(), value);
+
+		if (it != connectedLocations.end()) {
+			connectedLocations.erase(it);
+		}
+	}
 };
 
 #endif

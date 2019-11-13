@@ -9,6 +9,7 @@ class Game {
 private:
 	Player PC;
 	WorldVariables WorldVars;
+	std::map<Area, Location*> allAreas;
 	Location LocationVar;
 	
 	string defaultData;
@@ -21,8 +22,11 @@ private:
 	void saveData(string filename);
 	status loadGame(string filename);
 	void playGame(string filename = "");
+	void displayMap();
 public:
 	Game();
+	void initializeAllLocations();
+	void addToAreas(Location * loc);
 	void run();
 };
 
